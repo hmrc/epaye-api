@@ -30,6 +30,7 @@ import scala.concurrent.duration.{Duration, _}
 
 trait RestAssertions {
   protected def given() = new Givens()
+  protected def when()(implicit wsClient: WSClient) = new When(wsClient)
 }
 
 class Givens {
