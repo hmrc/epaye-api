@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,8 +37,8 @@ class GetAnnualStatementSpec extends WordSpec
   override implicit lazy val app: Application =
     new GuiceApplicationBuilder().overrides(bind[Router].toProvider[RoutesProvider]).build()
 
-  "AnnualStatement API should return a statement " should {
-    "containing EYU data" in {
+  "AnnualStatement API" should {
+    "return a statement containing EYU data" in {
       val apiBaseUrl = app.configuration.underlying.getString("api.baseUrl")
 
       val empRef = EmpRefGenerator.getEmpRef

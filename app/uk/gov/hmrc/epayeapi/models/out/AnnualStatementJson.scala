@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ case class NonRtiChargesJson(
   amount: BigDecimal,
   clearedByCredits: BigDecimal,
   clearedByPayments: BigDecimal,
+  clearedByWriteOffs: BigDecimal,
   balance: BigDecimal,
   dueDate: LocalDate
 )
@@ -41,21 +42,18 @@ object NonRtiChargesJson {
       amount = lineItem.charges,
       clearedByCredits = lineItem.credits,
       clearedByPayments = lineItem.payments,
+      clearedByWriteOffs = lineItem.writeOffs,
       balance = lineItem.balance,
       dueDate = lineItem.dueDate
     )
   }
 }
 
-case class PaymentsAndCreditsJson(
-  payments: BigDecimal,
-  credits: BigDecimal
-)
-
 case class EarlierYearUpdateJson(
   amount: BigDecimal,
   clearedByCredits: BigDecimal,
   clearedByPayments: BigDecimal,
+  clearedByWriteOffs: BigDecimal,
   balance: BigDecimal,
   dueDate: LocalDate
 )
@@ -66,11 +64,12 @@ object EarlierYearUpdateJson {
       .find(_.itemType.contains("eyu"))
       .map { lineItem =>
         EarlierYearUpdateJson(
-          lineItem.charges,
-          lineItem.credits,
-          lineItem.payments,
-          lineItem.balance,
-          lineItem.dueDate
+          amount = lineItem.charges,
+          clearedByCredits = lineItem.credits,
+          clearedByPayments = lineItem.payments,
+          clearedByWriteOffs = lineItem.writeOffs,
+          balance = lineItem.balance,
+          dueDate = lineItem.dueDate
         )
       }
   }
@@ -86,6 +85,7 @@ case class MonthlyChargesJson(
   amount: BigDecimal,
   clearedByCredits: BigDecimal,
   clearedByPayments: BigDecimal,
+  clearedByWriteOffs: BigDecimal,
   balance: BigDecimal,
   dueDate: LocalDate,
   isSpecified: Boolean,
@@ -103,6 +103,7 @@ object MonthlyChargesJson {
       amount = lineItem.charges,
       clearedByCredits = lineItem.credits,
       clearedByPayments = lineItem.payments,
+      clearedByWriteOffs = lineItem.writeOffs,
       balance = lineItem.balance,
       dueDate = lineItem.dueDate,
       isSpecified = lineItem.isSpecified,

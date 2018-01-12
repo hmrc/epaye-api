@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ class GetMonthlyStatementSpec
 
   "/organisations/epaye/{ton}/{tor}/statements/{taxYear}/{taxMonth}" should {
 
-    "returns a response body that conforms with the Monthly Statement schema" in {
+    "return a response body that conforms with the Monthly Statement schema" in {
       val empRef = EmpRefGenerator.getEmpRef
       val monthlyStatementUrl = s"$baseUrl/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2017-18/3"
       val inputJsonString = getResourceAsString("/epaye/monthly-statement/in/2017-3.json")

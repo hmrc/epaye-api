@@ -39,12 +39,14 @@
       "amount": 500
     }
   ],
+  "writeOffs": [],
   "dueDate": "2016-05-22",
   "summary": {
     "amount": 1000,
     "interest": 200,
     "clearedByCredits": 200,
     "clearedByPayments": 200,
+    "clearedByWriteOffs": 0,
     "balance": 800
   },
 

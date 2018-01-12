@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -92,12 +92,52 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
         EpayeSuccess(
           EpayeAnnualStatement(
             rti = AnnualStatementTable(
-              List(LineItem(TaxYear(2017), Some(EpayeTaxMonth(1)), 100.2, 0, 0, 100.2, new LocalDate(2017, 5, 22), isSpecified = false, codeText = None)),
-              AnnualTotal(100.2, 0, 0, 100.2)
+              List(
+                LineItem(
+                  taxYear = TaxYear(2017),
+                  taxMonth = Some(EpayeTaxMonth(1)),
+                  charges = 100.2,
+                  payments = 0,
+                  credits = 0,
+                  writeOffs = 0,
+                  balance = 100.2,
+                  dueDate = new LocalDate(2017, 5, 22),
+                  isSpecified = false,
+                  codeText = None,
+                  itemType = None
+                )
+              ),
+              AnnualTotal(
+                charges = 100.2,
+                payments = 0,
+                credits = 0,
+                writeOffs = 0,
+                balance = 100.2
+              )
             ),
             nonRti = AnnualStatementTable(
-              List(LineItem(TaxYear(2017), None, 20.0, 0, 0, 20.0, new LocalDate(2018, 2, 22), false, Some("P11D_CLASS_1A_CHARGE"))),
-              AnnualTotal(20.0, 0, 0, 20.0)
+              List(
+                LineItem(
+                  taxYear = TaxYear(2017),
+                  taxMonth = None,
+                  charges = 20.0,
+                  payments = 0,
+                  credits = 0,
+                  writeOffs = 0,
+                  balance = 20.0,
+                  dueDate = new LocalDate(2018, 2, 22),
+                  isSpecified = false,
+                  codeText = Some("P11D_CLASS_1A_CHARGE"),
+                  itemType = None
+                )
+              ),
+              AnnualTotal(
+                charges = 20.0,
+                payments = 0,
+                credits = 0,
+                writeOffs = 0,
+                balance = 20.0
+              )
             ),
             unallocated = None
           )

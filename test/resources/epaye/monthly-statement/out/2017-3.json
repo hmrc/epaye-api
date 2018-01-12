@@ -14,7 +14,7 @@
   "rtiCharges": [
     {
       "code": "RTI_IN_YEAR_CHARGE_NIC1",
-      "amount": 200
+      "amount": 300
     },
     {
       "code": "RTI_IN_YEAR_CHARGE_STUDENT_LOAN_DEDUCTION",
@@ -42,13 +42,20 @@
       "amount": 500
     }
   ],
+  "writeOffs": [
+    {
+      "code": "RTI_IN_YEAR_CHARGE_NIC1",
+      "amount": 50
+    }
+  ],
   "dueDate": "2017-07-22",
   "summary": {
-    "amount": 1000,
+    "amount": 1100,
     "interest": 0,
     "clearedByCredits": 500,
     "clearedByPayments": 500,
-    "balance": 0
+    "clearedByWriteOffs": 50,
+    "balance": 50
   },
   "_links": {
     "empRefs": {

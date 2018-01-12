@@ -11,6 +11,7 @@
         "charges": 100.2,
         "payments": 0,
         "credits": 0,
+        "writeOffs": 0,
         "balance": 100.2,
         "dueDate": "2017-05-22",
         "isSpecified": false
@@ -20,6 +21,7 @@
       "charges": 100.2,
       "payments": 0,
       "credits": 0,
+      "writeOffs": 0,
       "balance": 100.2
     }
   },
@@ -32,6 +34,7 @@
         "charges": 20.0,
         "payments": 0,
         "credits": 0,
+        "writeOffs": 0,
         "balance": 20.0,
         "dueDate": "2018-02-22",
         "isSpecified": false,
@@ -42,6 +45,7 @@
       "charges": 20.0,
       "payments": 0,
       "credits": 0,
+      "writeOffs": 0,
       "balance": 20.0
     }
   }

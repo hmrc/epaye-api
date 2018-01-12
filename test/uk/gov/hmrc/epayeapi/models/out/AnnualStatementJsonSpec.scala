@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,6 +49,7 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
         charges = 0,
         payments = 0,
         credits = 0,
+        writeOffs = 0,
         balance = 0
       )
 
@@ -59,13 +60,15 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
               AnnualStatementTable(
                 lineItems = Seq(
                   LineItem(
-                    taxYear,
-                    None,
-                    100,
-                    10,
-                    20,
-                    100 - 20 - 10,
-                    dueDate,
+                    taxYear = taxYear,
+                    taxMonth = None,
+                    charges = 100,
+                    payments = 10,
+                    credits = 20,
+                    writeOffs = 0,
+                    balance = 100 - 20 - 10,
+                    dueDate = dueDate,
+                    isSpecified = false,
                     codeText = None,
                     itemType = Some("eyu")
                   )
@@ -79,6 +82,7 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
           amount = 100,
           clearedByCredits = 20,
           clearedByPayments = 10,
+          clearedByWriteOffs = 0,
           balance = 100 - 10 - 20,
           dueDate = dueDate
         ))
@@ -99,10 +103,12 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
           charges = 100,
           payments = 10,
           credits = 20,
+          writeOffs = 0,
           balance = 100 - 30,
           dueDate = dueDate,
           isSpecified = true,
-          codeText = None
+          codeText = None,
+          itemType = None
         )
 
       MonthlyChargesJson.from(apiBaseUrl, lineItem, empRef, taxYear) shouldBe
@@ -111,6 +117,7 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
           amount = 100,
           clearedByCredits = 20,
           clearedByPayments = 10,
+          clearedByWriteOffs = 0,
           balance = 100 - 10 - 20,
           dueDate = dueDate,
           isSpecified = true,
@@ -126,9 +133,12 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
           charges = 100,
           payments = 10,
           credits = 20,
+          writeOffs = 0,
           balance = 100 - 30,
           dueDate = dueDate,
-          codeText = None
+          isSpecified = false,
+          codeText = None,
+          itemType = None
         )
 
       MonthlyChargesJson.from(apiBaseUrl, lineItem, empRef, taxYear) shouldBe None
@@ -146,9 +156,12 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
           charges = 100,
           payments = 10,
           credits = 20,
+          writeOffs = 0,
           balance = 100 - 30,
           dueDate = dueDate,
-          codeText = Some(code)
+          isSpecified = false,
+          codeText = Some(code),
+          itemType = None
         )
 
       NonRtiChargesJson.from(lineItem, taxYear) shouldBe
@@ -157,6 +170,7 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
           amount = 100,
           clearedByCredits = 20,
           clearedByPayments = 10,
+          clearedByWriteOffs = 0,
           balance = 100 - 10 - 20,
           dueDate = dueDate
         ))

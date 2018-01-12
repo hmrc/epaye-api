@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,7 +58,6 @@ trait JsonWrites {
   implicit lazy val selfLinkWrites: Writes[SelfLink] = writes[SelfLink]
   implicit lazy val monthlyChargesJsonWrites: Writes[MonthlyChargesJson] = writes[MonthlyChargesJson]
   implicit lazy val embeddedRtiChargesJsonWrites: Writes[EmbeddedRtiChargesJson] = writes[EmbeddedRtiChargesJson]
-  implicit lazy val paymentsAndCreditsJsonWrites: Writes[PaymentsAndCreditsJson] = writes[PaymentsAndCreditsJson]
   implicit lazy val earlierYearUpdateJsonWrites: Writes[EarlierYearUpdateJson] = writes[EarlierYearUpdateJson]
   implicit lazy val periodJsonWrites: Writes[PeriodJson] = writes[PeriodJson]
   implicit lazy val nonRtiChargesJsonWrites: Writes[NonRtiChargesJson] = writes[NonRtiChargesJson]

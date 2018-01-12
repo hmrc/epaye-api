@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -141,7 +141,7 @@ case class RequestExecutor(request: WSRequest) {
 class When(wsClient: WSClient) {
   def get(url: String): RequestExecutor = {
     RequestExecutor(
-      wsClient.url(url).withRequestTimeout(Duration(2, SECONDS))
+      wsClient.url(url).withRequestTimeout(Duration(3, SECONDS))
     )
   }
 }

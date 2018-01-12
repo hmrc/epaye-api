@@ -10,6 +10,7 @@
       "amount": 5000,
       "clearedByCredits": 500,
       "clearedByPayments": 2000,
+      "clearedByWriteOffs": 0,
       "balance": 2500,
       "dueDate": "2016-07-22"
     }
@@ -19,6 +20,7 @@
       "amount": 2000,
       "clearedByCredits": 300,
       "clearedByPayments": 200,
+      "clearedByWriteOffs": 0,
       "balance": 1500,
       "dueDate": "2016-05-22"
     },
@@ -32,6 +34,7 @@
         "amount": 1200,
         "clearedByCredits": 100,
         "clearedByPayments": 200,
+        "clearedByWriteOffs": 0,
         "balance": 900,
         "dueDate": "2016-08-22",
         "isSpecified": false,

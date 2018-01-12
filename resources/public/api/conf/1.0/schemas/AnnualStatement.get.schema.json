@@ -172,6 +172,10 @@
           "type": "number",
           "description": "The amount cleared by payments"
         },
+        "clearedByWriteOffs": {
+          "type": "number",
+          "description": "The amount cleared by write-offs"
+        },
         "balance": {
           "type": "number",
           "description": "Charge balance"
@@ -181,6 +185,7 @@
         "amount",
         "clearedByCredits",
         "clearedByPayments",
+        "clearedByWriteOffs",
         "balance"
       ]
     }

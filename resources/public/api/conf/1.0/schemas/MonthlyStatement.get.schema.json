@@ -41,6 +41,9 @@
         ]
       }
     },
+    "writeOffs": {
+      "$ref": "#/definitions/monthlyItems"
+    },
     "dueDate": {
       "$ref": "Definitions.schema.json#/definitions/date"
     },
@@ -58,6 +61,9 @@
         "clearedByPayments": {
           "type": "number"
         },
+        "clearedByWriteOffs": {
+          "type": "number"
+        },
         "balance": {
           "type": "number"
         }
@@ -67,6 +73,7 @@
         "interest",
         "clearedByCredits",
         "clearedByPayments",
+        "clearedByWriteOffs",
         "balance"
       ]
     },
@@ -109,6 +116,7 @@
     "interest",
     "allocatedCredits",
     "allocatedPayments",
+    "writeOffs",
     "dueDate",
     "summary",
     "_links"

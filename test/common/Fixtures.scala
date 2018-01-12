@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ object Fixtures {
       |        "charges":1200,
       |        "payments": 0,
       |        "credits": 0,
+      |        "writeOffs": 0,
       |        "balance": 1200,
       |        "dueDate": "2017-11-22",
       |        "isSpecified": false,
@@ -45,9 +46,10 @@ object Fixtures {
       |        "taxYear": {
       |          "yearFrom": 2017
       |        },
-      |        "charges":700,
+      |        "charges":750,
       |        "payments": 300,
       |        "credits": 200,
+      |        "writeOffs": 50,
       |        "balance": 200,
       |        "dueDate": "2017-04-22",
       |        "isSpecified": false,
@@ -60,19 +62,21 @@ object Fixtures {
       |        "taxMonth": {
       |          "month": 3
       |        },
-      |        "charges":700,
+      |        "charges":750,
       |        "payments": 300,
       |        "credits": 200,
+      |        "writeOffs": 50,
       |        "balance": 200,
       |        "dueDate": "2017-07-22",
       |        "isSpecified": true
       |      }
       |    ],
       |    "totals": {
-      |      "charges":1900,
-      |      "payments": 300,
-      |      "credits": 200,
-      |      "balance": 1400
+      |      "charges":3200,
+      |      "payments": 600,
+      |      "credits": 400,
+      |      "writeOffs": 100,
+      |      "balance": 2100
       |    }
       |  },
       |  "nonRti": {
@@ -84,6 +88,7 @@ object Fixtures {
       |        "charges":300,
       |        "payments": 30,
       |        "credits": 70,
+      |        "writeOffs": 0,
       |        "balance": 200,
       |        "dueDate": "2017-07-22",
       |        "isSpecified": false,
@@ -95,6 +100,7 @@ object Fixtures {
       |      "charges":0,
       |      "payments": 0,
       |      "credits": 0,
+      |      "writeOffs": 0,
       |      "balance": 0
       |    }
       |  },
@@ -116,15 +122,17 @@ object Fixtures {
       |      "amount": 300,
       |      "clearedByCredits": 70,
       |      "clearedByPayments": 30,
+      |      "clearedByWriteOffs": 0,
       |      "balance": 200,
       |      "dueDate": "2017-07-22"
       |    }
       |  ],
       |  "_embedded": {
       |    "earlierYearUpdate": {
-      |      "amount": 700,
+      |      "amount": 750,
       |      "clearedByCredits": 200,
       |      "clearedByPayments": 300,
+      |      "clearedByWriteOffs": 50,
       |      "balance": 200,
       |      "dueDate": "2017-04-22"
       |    },
@@ -138,6 +146,7 @@ object Fixtures {
       |        "amount": 1200,
       |        "clearedByCredits": 0,
       |        "clearedByPayments": 0,
+      |        "clearedByWriteOffs": 0,
       |        "balance": 1200,
       |        "dueDate": "2017-11-22",
       |        "isSpecified": false,
@@ -153,9 +162,10 @@ object Fixtures {
       |          "firstDay": "2017-06-06",
       |          "lastDay": "2017-07-05"
       |        },
-      |        "amount": 700,
+      |        "amount": 750,
       |        "clearedByCredits": 200,
       |        "clearedByPayments": 300,
+      |        "clearedByWriteOffs": 50,
       |        "balance": 200,
       |        "dueDate": "2017-07-22",
       |        "isSpecified": true,

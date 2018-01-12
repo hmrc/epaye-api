@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,8 @@ case class MonthlyStatementJson(
   interest: Seq[ChargeJson],
   allocatedCredits: Seq[ChargeJson],
   allocatedPayments: Seq[PaymentJson],
-  dueDate: LocalDate,
+  writeOffs: Seq[ChargeJson],
+dueDate: LocalDate,
   summary: MonthlySummaryJson,
   _links: MonthlyStatementLinksJson
 )
@@ -50,6 +51,7 @@ case class MonthlySummaryJson(
   interest: BigDecimal,
   clearedByCredits: BigDecimal,
   clearedByPayments: BigDecimal,
+  clearedByWriteOffs: BigDecimal,
   balance: BigDecimal
 )
 
@@ -73,6 +75,7 @@ object MonthlyStatementJson {
       interest = if (json.charges.others == 0) Seq.empty else Seq(ChargeJson("INTEREST", json.charges.others)),
       allocatedCredits = Charges(json.credits.fps) ++ Charges(json.credits.cis) ++ Charges(json.credits.eps),
       allocatedPayments = Payments(json.payments),
+      writeOffs = Charges(json.writeOffs),
       dueDate = json.balance.dueDate,
       summary = MonthlySummaryJson(json),
       _links = MonthlyStatementLinksJson(apiBaseUrl, empRef, taxYear, taxMonth)
@@ -102,11 +105,12 @@ object PaymentJson {
 object MonthlySummaryJson {
   def apply(json: EpayeMonthlyStatement): MonthlySummaryJson =
     MonthlySummaryJson(
-      json.charges.total - json.charges.others,
-      json.charges.others,
-      json.credits.total,
-      json.payments.total,
-      json.balance.total
+      amount = json.charges.total - json.charges.others,
+      interest = json.charges.others,
+      clearedByCredits = json.credits.total,
+      clearedByPayments = json.payments.total,
+      clearedByWriteOffs = json.writeOffs.total,
+      balance = json.balance.total
     )
 }
 
