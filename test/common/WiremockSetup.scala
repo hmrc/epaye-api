@@ -18,6 +18,7 @@ package common
 
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
+import com.github.tomakehurst.wiremock.common.Slf4jNotifier
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 import org.scalatest._
 
@@ -26,7 +27,11 @@ trait WiremockSetup extends BeforeAndAfterEach with BeforeAndAfterAll { self: Su
   lazy val WIREMOCK_PORT: Int = 22222
 
   val wiremockBaseUrl: String = s"http://localhost:$WIREMOCK_PORT"
-  val wireMockServer = new WireMockServer(wireMockConfig().port(WIREMOCK_PORT))
+  val wireMockServer =
+    new WireMockServer(wireMockConfig()
+                         .port(WIREMOCK_PORT)
+                         .notifier(new Slf4jNotifier(true)))
+
 
 
   override def beforeAll(): Unit = {

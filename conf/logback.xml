@@ -46,12 +46,16 @@
     </logger>
 
     <logger name="com.google.inject" level="INFO"/>
-
+    <logger name="org.mortbay.log" level="WARN"/>
+    <logger name="org.apache" level="WARN"/>
+    <logger name="io.netty" level="WARN"/>
+    <logger name="org.asynchttpclient" level="WARN"/>
+    <logger name="WireMock" level="WARN"/>
     <logger name="uk.gov" level="INFO"/>
-
+    <logger name="play" level="WARN"/>
+    <logger name="akka" level="WARN"/>
     <logger name="application" level="DEBUG"/>
-
-    <logger name="connector" level="TRACE">
+    <logger name="connector" level="DEBUG">
         <appender-ref ref="STDOUT"/>
     </logger>
 

@@ -46,6 +46,7 @@ trait JsonWrites {
   implicit lazy val empRefsLinksWrites: Writes[EmpRefsLinks] = writes[EmpRefsLinks]
   implicit lazy val empRefLinksWrites: Writes[EmpRefLinks] = writes[EmpRefLinks]
   implicit lazy val empRefItemWrites: Writes[EmpRefItem] = writes[EmpRefItem]
+  implicit lazy val embeddedEmpRefsJsonWrites: Writes[EmbeddedEmpRefs] = writes[EmbeddedEmpRefs]
   implicit lazy val empRefsJsonWrites: Writes[EmpRefsJson] = writes[EmpRefsJson]
   implicit lazy val breakdownWrites: Writes[Breakdown] = writes[Breakdown]
   implicit lazy val outstandingChargesWrites: Writes[OutstandingCharges] = writes[OutstandingCharges]

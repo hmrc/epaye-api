@@ -19,12 +19,15 @@ package uk.gov.hmrc.epayeapi.controllers
 import javax.inject.{Inject, Singleton}
 
 import akka.stream.Materializer
+import play.api.Logger
 import play.api.libs.json.Json
-import play.api.mvc.{Action, EssentialAction}
+import play.api.mvc.{Action, EssentialAction, Result}
 import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.epayeapi.connectors.EpayeApiConfig
+import uk.gov.hmrc.epayeapi.connectors.{EpayeApiConfig, EpayeConnector}
 import uk.gov.hmrc.epayeapi.models.Formats._
-import uk.gov.hmrc.epayeapi.models.out.EmpRefsJson
+import uk.gov.hmrc.epayeapi.models.in._
+import uk.gov.hmrc.epayeapi.models.out.ApiErrorJson.EmpRefNotFound
+import uk.gov.hmrc.epayeapi.models.out.{ApiErrorJson, EmpRefsJson}
 
 import scala.concurrent.ExecutionContext
 
@@ -32,14 +35,35 @@ import scala.concurrent.ExecutionContext
 case class GetEmpRefsController @Inject() (
   config: EpayeApiConfig,
   authConnector: AuthConnector,
+  epayeConnector: EpayeConnector,
   implicit val ec: ExecutionContext,
   implicit val mat: Materializer
 )
   extends ApiController {
 
-  def getEmpRefs(): EssentialAction = EmpRefsAction { empRefs =>
-    Action { request =>
-      Ok(Json.toJson(EmpRefsJson.fromSeq(config.apiBaseUrl, empRefs.toSeq)))
+  def getEmpRefs(): EssentialAction = AuthorisedAction(epayeEnrolment) {
+    Action.async { implicit request =>
+      val empRefs = epayeConnector.getEmpRefs(hc)
+      empRefs.map {
+        successHandler orElse errorHandler
+      }
     }
+  }
+
+  def successHandler: PartialFunction[EpayeResponse[EpayeEmpRefsResponse], Result] = {
+    case EpayeSuccess(EpayeEmpRefsResponse(empRefs)) =>
+      val empRefsJson = EmpRefsJson.fromSeq(config.apiBaseUrl, empRefs)
+      Ok(Json.toJson(empRefsJson))
+  }
+
+  def errorHandler: PartialFunction[EpayeResponse[EpayeEmpRefsResponse], Result] = {
+    case EpayeJsonError(err) =>
+      Logger.error(s"Upstream returned invalid json: $err")
+      InternalServerError(Json.toJson(ApiErrorJson.InternalServerError))
+    case EpayeNotFound() =>
+      NotFound(Json.toJson(EmpRefNotFound))
+    case error: EpayeResponse[_] =>
+      Logger.error(s"Error while fetching totals: $error")
+      InternalServerError(Json.toJson(ApiErrorJson.InternalServerError))
   }
 }

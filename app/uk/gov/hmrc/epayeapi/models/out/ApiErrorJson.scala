@@ -19,8 +19,23 @@ package uk.gov.hmrc.epayeapi.models.out
 case class ApiErrorJson(code: String, message: String)
 
 object ApiErrorJson {
-  object AuthorizationHeaderInvalid extends ApiErrorJson(
-    "AUTHORIZATION_HEADER_INVALID",
+  object InvalidBearerToken extends ApiErrorJson(
+    "INVALID_BEARER_TOKEN",
+    "You must provide a valid Bearer token in your header"
+  )
+
+  object MissingBearerToken extends ApiErrorJson(
+    "MISSING_BEARER_TOKEN",
+    "You must provide a valid Bearer token in your header"
+  )
+
+  object ExpiredBearerToken extends ApiErrorJson(
+    "EXPIRED_BEARER_TOKEN",
+    "You must provide a valid Bearer token in your header"
+  )
+
+  object AuthorisationError extends ApiErrorJson(
+    "AUTHORISATION_ERROR",
     "You must provide a valid Bearer token in your header"
   )
 

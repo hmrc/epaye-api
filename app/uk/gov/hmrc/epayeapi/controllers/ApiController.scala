@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.epayeapi.controllers
 
-import uk.gov.hmrc.epayeapi.models.Formats._
 import akka.stream.Materializer
 import play.api.libs.json.Json
 import play.api.libs.streams.Accumulator
@@ -24,11 +23,13 @@ import play.api.mvc._
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.{Retrieval, Retrievals}
 import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.epayeapi.models.out.ApiErrorJson.{AuthorizationHeaderInvalid, InsufficientEnrolments, InvalidEmpRef}
+import uk.gov.hmrc.epayeapi.models.Formats._
+import uk.gov.hmrc.epayeapi.models.out.ApiErrorJson
+import uk.gov.hmrc.epayeapi.models.out.ApiErrorJson.{InsufficientEnrolments, InvalidEmpRef}
 import uk.gov.hmrc.play.binders.SimpleObjectBinder
 import uk.gov.hmrc.play.microservice.controller.BaseController
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 trait ApiController extends BaseController with AuthorisedFunctions {
   val epayeEnrolment = Enrolment("IR-PAYE")
@@ -37,16 +38,22 @@ trait ApiController extends BaseController with AuthorisedFunctions {
   implicit def ec: ExecutionContext
   implicit def mat: Materializer
 
+  def AuthorisedAction(enrolment: Enrolment)(action: => EssentialAction): EssentialAction =
+    EssentialAction { implicit request =>
+      Accumulator.done {
+        authorised(enrolment) {
+          action(request).run()
+        } recover recoverAuthFailure
+      }
+    }
+
   def EnrolmentsAction(enrolment: Enrolment, retrieveEnrolments: Retrieval[Enrolments])(action: Enrolments => EssentialAction): EssentialAction = {
     EssentialAction { implicit request =>
       Accumulator.done {
         authorised(enrolment.withDelegatedAuthRule("epaye-auth"))
           .retrieve(retrieveEnrolments) { enrolments =>
             action(enrolments)(request).run()
-          } recoverWith {
-            case ex: MissingBearerToken => missingBearerToken
-            case ex: InsufficientEnrolments => insufficientEnrolments
-          }
+          } recover recoverAuthFailure
       }
     }
   }
@@ -69,12 +76,26 @@ trait ApiController extends BaseController with AuthorisedFunctions {
     }
   }
 
-  def missingBearerToken: Future[Result] =
-    Future.successful(Unauthorized(Json.toJson(AuthorizationHeaderInvalid)))
-  def insufficientEnrolments: Future[Result] =
-    Future.successful(Forbidden(Json.toJson(InsufficientEnrolments)))
-  def invalidEmpRef: Future[Result] =
-    Future.successful(Forbidden(Json.toJson(InvalidEmpRef)))
+  def recoverAuthFailure: PartialFunction[Throwable, Result] = {
+    case ex: MissingBearerToken => missingBearerToken
+    case ex: InvalidBearerToken => invalidBearerToken
+    case ex: BearerTokenExpired => expiredBearerToken
+    case ex: InsufficientEnrolments => insufficientEnrolments
+    case ex: AuthorisationException => authorisationError
+  }
+
+  def authorisationError: Result =
+    Unauthorized(Json.toJson(ApiErrorJson.AuthorisationError))
+  def invalidBearerToken: Result =
+    Unauthorized(Json.toJson(ApiErrorJson.InvalidBearerToken))
+  def expiredBearerToken: Result =
+    Unauthorized(Json.toJson(ApiErrorJson.ExpiredBearerToken))
+  def missingBearerToken: Result =
+    Unauthorized(Json.toJson(ApiErrorJson.MissingBearerToken))
+  def insufficientEnrolments: Result =
+    Forbidden(Json.toJson(InsufficientEnrolments))
+  def invalidEmpRef: Result =
+    Forbidden(Json.toJson(InvalidEmpRef))
 
   private def enrolmentToEmpRef(enrolment: Enrolment): Option[EmpRef] = {
     for {
