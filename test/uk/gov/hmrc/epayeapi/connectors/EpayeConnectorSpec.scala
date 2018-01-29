@@ -22,16 +22,21 @@ import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
 import play.api.http.Status
+import play.api.libs.json.Json
+import uk.gov.hmrc.domain.EmpRef
+
 import uk.gov.hmrc.epayeapi.config.WSHttp
 import uk.gov.hmrc.epayeapi.models.in._
+import uk.gov.hmrc.epayeapi.models.Formats._
 import uk.gov.hmrc.epayeapi.models.{JsonFixtures, TaxYear}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.http.{BadGatewayException, HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future.successful
+import scala.concurrent.Future.{successful, failed}
 import scala.concurrent.duration._
+
 
 class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
 
@@ -41,10 +46,54 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
     val config = EpayeApiConfig("https://EPAYE", "http://localhost")
     val connector = EpayeConnector(config, http, global)
     val empRef = EmpRefGenerator.getEmpRef
+    val urlEmpRefs = s"${config.epayeBaseUrl}/epaye/self/api/v1/emprefs"
     val urlTotals = s"${config.epayeBaseUrl}/epaye/${empRef.encodedValue}/api/v1/annual-statement"
     val urlTotalsByType = s"${config.epayeBaseUrl}/epaye/${empRef.encodedValue}/api/v1/totals/by-type"
     def urlAnnualStatement(taxYear: TaxYear): String =
       s"${config.epayeBaseUrl}/epaye/${empRef.encodedValue}/api/v1/annual-statement/${taxYear.asString}"
+
+    def getRandomEmpRefs(num: Int): Seq[EmpRef] =
+      for (_ <- 0 to num) yield EmpRefGenerator.getEmpRef
+
+    def getEmpRefsResponse(empRefs: Seq[EmpRef]): String =
+      Json.prettyPrint(Json.toJson(EpayeEmpRefsResponse(empRefs)))
+  }
+
+  "EpayeConnector.getEmpRefs" should {
+    "return all empRefs a customer has access to" in new Setup {
+      val empRefs = getRandomEmpRefs(10)
+      val response = getEmpRefsResponse(empRefs)
+      when(connector.http.GET(urlEmpRefs)).thenReturn {
+        successful {
+          HttpResponse(Status.OK, responseString = Some(response))
+        }
+      }
+
+      await(connector.getEmpRefs(hc)) shouldBe EpayeSuccess(EpayeEmpRefsResponse(empRefs))
+    }
+
+    "return an exception when upstream returns a 502 Bad Gateway" in new Setup {
+      val error = """{"error": "Error retrieving EmpRefs"}"""
+      when(connector.http.GET(urlEmpRefs)).thenReturn {
+        successful {
+          HttpResponse(Status.BAD_GATEWAY, responseString = Some(error))
+        }
+      }
+
+      await(connector.getEmpRefs(hc)) shouldBe EpayeException(error)
+    }
+
+    "return an exception when the client throws an exception" in new Setup {
+      val error = """{"error": "Error retrieving EmpRefs"}"""
+
+      when(connector.http.GET(urlEmpRefs)).thenReturn {
+        failed {
+          new BadGatewayException(error)
+        }
+      }
+
+      await(connector.getEmpRefs(hc)) shouldBe EpayeException(error)
+    }
   }
 
   "EpayeConnector" should {
@@ -144,5 +193,4 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
         )
     }
   }
-
 }

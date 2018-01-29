@@ -17,7 +17,7 @@
 package uk.gov.hmrc.epayeapi.models.in
 
 import play.api.libs.json.Json.reads
-import play.api.libs.json.Reads
+import play.api.libs.json.{Format, Json, Reads}
 import uk.gov.hmrc.epayeapi.models.TaxYear
 
 trait EpayeReads {
@@ -44,4 +44,6 @@ trait EpayeReads {
   implicit lazy val epayeMonthlyPaymentDetailsReads: Reads[EpayeMonthlyPaymentDetails] = reads[EpayeMonthlyPaymentDetails]
   implicit lazy val epayeMonthlyPaymentItemReads: Reads[EpayeMonthlyPaymentItem] = reads[EpayeMonthlyPaymentItem]
   implicit lazy val epayeMonthlyBalanceReads: Reads[EpayeMonthlyBalance] = reads[EpayeMonthlyBalance]
+
+  implicit lazy val epayeEmpRefsResponse: Format[EpayeEmpRefsResponse] = Json.format[EpayeEmpRefsResponse]
 }

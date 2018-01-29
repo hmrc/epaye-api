@@ -39,6 +39,14 @@ case class EpayeConnector @Inject() (
   implicit val ec: ExecutionContext
 ) extends ConnectorBase {
 
+  def getEmpRefs(headers: HeaderCarrier): Future[EpayeResponse[EpayeEmpRefsResponse]] = {
+    val url =
+      s"${config.epayeBaseUrl}" +
+        s"/epaye/self/api/v1/emprefs"
+
+    get[EpayeEmpRefsResponse](url, headers)
+  }
+
   def getTotal(empRef: EmpRef, headers: HeaderCarrier): Future[EpayeResponse[EpayeTotalsResponse]] = {
     val url =
       s"${config.epayeBaseUrl}" +

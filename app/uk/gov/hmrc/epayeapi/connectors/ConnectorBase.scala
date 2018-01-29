@@ -65,8 +65,10 @@ trait ConnectorBase {
             }
           case Status.NOT_FOUND =>
             EpayeNotFound()
-          case _ =>
+          case statusCode: Int if statusCode < 500 =>
             EpayeError(response.status, response.body)
+          case statusCode: Int =>
+            EpayeException(response.body)
         }
       }
     }

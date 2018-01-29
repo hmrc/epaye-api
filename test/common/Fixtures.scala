@@ -223,4 +223,12 @@ object Fixtures {
       """.stripMargin
   }
 
+  def authorised: String = {
+    """
+      |{
+      |  "authorisedEnrolments": []
+      |}
+    """.stripMargin
+  }
+
 }

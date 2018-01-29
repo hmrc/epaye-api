@@ -18,11 +18,15 @@ package common
 
 import com.github.tomakehurst.wiremock.client.WireMock._
 import org.scalatest.Matchers
+import play.api.Logger
+import play.api.http.HeaderNames
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSClient, WSRequest}
 import uk.gov.hmrc.domain.EmpRef
+import uk.gov.hmrc.epayeapi.models.in.EpayeEmpRefsResponse
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.http.ws.WSHttpResponse
+import uk.gov.hmrc.epayeapi.models.Formats._
 
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -34,15 +38,71 @@ trait RestAssertions {
 }
 
 class Givens {
-  def clientWith(empRef: EmpRef): ClientGivens = new ClientGivens(empRef)
+  def clientWith(empRef: EmpRef): ClientWithEmpRefGivens = new ClientWithEmpRefGivens(empRef)
+  def client: ClientGivens = new ClientGivens
+
 }
 
-class ClientGivens(empRef: EmpRef) {
+trait BaseClientGivens[A <: BaseClientGivens[A]] { self: A =>
+  def isMissingBearerToken: A = isUnauthorizedWithError("MissingBearerToken")
+  def isInsufficientConfidenceLevel: A = isUnauthorizedWithError("InsufficientConfidenceLevel")
+  def isUnsupportedAffinityGroup: A = isUnauthorizedWithError("UnsupportedAffinityGroup")
+  def isUnsupportedCredentialRole: A = isUnauthorizedWithError("UnsupportedCredentialRole")
+  def isUnsupportedAuthProvider: A = isUnauthorizedWithError("UnsupportedAuthProvider")
+  def isBearerTokenExpired: A = isUnauthorizedWithError("BearerTokenExpired")
+  def isInvalidBearerToken: A = isUnauthorizedWithError("InvalidBearerToken")
+  def isSessionRecordNotFound: A = isUnauthorizedWithError("SessionRecordNotFound")
+  def isIncorrectCredentialStrength: A = isUnauthorizedWithError("IncorrectCredentialStrength")
+  def isUnauthorizedWithError(error: String = "MissingBearerToken"): A = {
+    stubFor {
+      post(urlPathEqualTo("/auth/authorise"))
+        .willReturn {
+          aResponse
+            .withBody("{}")
+            .withHeader(HeaderNames.WWW_AUTHENTICATE, s"""MDTP detail="$error"""")
+            .withStatus(401)
+        }
+    }
+    this
+  }
   def when()(implicit wsClient: WSClient): When = new When(wsClient)
+  def and(): A = this
+}
 
-  def and(): ClientGivens = this
+class ClientGivens extends BaseClientGivens[ClientGivens] {
 
-  def epayeTotalsReturns(body: String): ClientGivens = {
+  def isAuthorized: ClientGivens = {
+    stubFor {
+      post(urlPathEqualTo(s"/auth/authorise"))
+        .willReturn {
+          aResponse()
+            .withBody(Fixtures.authorised)
+            .withStatus(200)
+        }
+    }
+    this
+  }
+
+  def epayeEmpRefsEndpointReturns(response: String): ClientGivens = {
+    epayeEmpRefsEndpointReturns(200, response)
+  }
+
+  def epayeEmpRefsEndpointReturns(status: Int, response: String): ClientGivens = {
+    stubFor {
+      get(urlPathEqualTo(s"/epaye/self/api/v1/emprefs"))
+        .willReturn {
+          aResponse()
+            .withBody(response)
+            .withHeader("Content-Type", "application/json")
+            .withStatus(status)
+        }
+    }
+    this
+  }
+}
+
+class ClientWithEmpRefGivens(empRef: EmpRef) extends BaseClientGivens[ClientWithEmpRefGivens] {
+  def epayeTotalsReturns(body: String): ClientWithEmpRefGivens = {
     stubFor(
       get(
         urlPathEqualTo(s"/epaye/${empRef.encodedValue}/api/v1/annual-statement")
@@ -57,7 +117,7 @@ class ClientGivens(empRef: EmpRef) {
     this
   }
 
-  def epayeAnnualStatementReturns(body: String): ClientGivens = {
+  def epayeAnnualStatementReturns(body: String): ClientWithEmpRefGivens = {
     stubFor(
       get(
         urlPathEqualTo(s"/epaye/${empRef.encodedValue}/api/v1/annual-statement")
@@ -72,7 +132,7 @@ class ClientGivens(empRef: EmpRef) {
     this
   }
 
-  def epayeMonthlyStatementReturns(body: String): ClientGivens = {
+  def epayeMonthlyStatementReturns(body: String): ClientWithEmpRefGivens = {
     stubFor(
       get(
         urlPathEqualTo(s"/epaye/${empRef.encodedValue}/api/v1/monthly-statement")
@@ -87,7 +147,7 @@ class ClientGivens(empRef: EmpRef) {
     this
   }
 
-  def isAuthorized: ClientGivens = {
+  def isAuthorized: ClientWithEmpRefGivens = {
     stubFor(
       post(
         urlPathEqualTo(s"/auth/authorise")
@@ -123,6 +183,11 @@ class Assertions(response: HttpResponse) extends Matchers {
     this
   }
 
+  def prettyPrintBody(): Assertions = {
+    println(Json.prettyPrint(Json.parse(response.body)))
+    this
+  }
+
   def printStatus(): Assertions = {
     println(s"Response status=${response.status}")
     this
@@ -140,6 +205,7 @@ case class RequestExecutor(request: WSRequest) {
 
 class When(wsClient: WSClient) {
   def get(url: String): RequestExecutor = {
+    Logger.info(s"Requesting: ${url}")
     RequestExecutor(
       wsClient.url(url).withRequestTimeout(Duration(3, SECONDS))
     )

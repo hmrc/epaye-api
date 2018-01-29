@@ -17,24 +17,31 @@
 package uk.gov.hmrc.epayeapi.models.out
 
 import uk.gov.hmrc.domain.EmpRef
+import uk.gov.hmrc.epayeapi.models.TaxYear
+import uk.gov.hmrc.time.TaxYearResolver
 
 case class EmpRefsJson(
-  empRefs: Seq[EmpRefItem],
+  _embedded: EmbeddedEmpRefs,
   _links: EmpRefsLinks
+)
+
+case class EmbeddedEmpRefs(
+  empRefs: Seq[EmpRefItem]
 )
 
 object EmpRefsJson {
   def fromSeq(apiBaseUrl: String, seq: Seq[EmpRef]): EmpRefsJson =
-    EmpRefsJson(seq.map(EmpRefItem(apiBaseUrl, _)), EmpRefsLinks(apiBaseUrl))
+    EmpRefsJson(EmbeddedEmpRefs(seq.map(EmpRefItem(apiBaseUrl, _))), EmpRefsLinks(apiBaseUrl))
+
   def apply(apiBaseUrl: String, empRef: EmpRef): EmpRefsJson =
-    EmpRefsJson(Seq(EmpRefItem(apiBaseUrl, empRef)), EmpRefsLinks(apiBaseUrl))
+    fromSeq(apiBaseUrl, Seq(empRef))
 }
 
-case class EmpRefItem(empRef: EmpRef, _links: EmpRefLinks)
+case class EmpRefItem(taxOfficeNumber: String, taxOfficeReference: String, _links: EmpRefLinks)
 
 object EmpRefItem {
   def apply(apiBaseUrl: String, empRef: EmpRef): EmpRefItem =
-    EmpRefItem(empRef, EmpRefLinks(apiBaseUrl, empRef))
+    EmpRefItem(empRef.taxOfficeNumber, empRef.taxOfficeReference, EmpRefLinks(apiBaseUrl, empRef))
 }
 
 case class EmpRefsLinks(self: Link)
@@ -44,10 +51,19 @@ object EmpRefsLinks {
     new EmpRefsLinks(self = Link.empRefsLink(apiBaseUrl))
 }
 
-case class EmpRefLinks(summary: Link)
+case class EmpRefLinks(
+  self: Link,
+  statements: Link,
+  currentStatement: Link
+)
 
 object EmpRefLinks {
   def apply(apiBaseUrl: String, empRef: EmpRef): EmpRefLinks =
-    EmpRefLinks(summary = Link.summaryLink(apiBaseUrl, empRef))
+    EmpRefLinks(
+      self = Link.summaryLink(apiBaseUrl, empRef),
+      statements = Link.statementsLink(apiBaseUrl, empRef),
+      currentStatement = Link.anualStatementLink(apiBaseUrl, empRef, taxYear = TaxYear(TaxYearResolver.currentTaxYear))
+    )
+//    EmpRefLinks(summary = Link.summaryLink(apiBaseUrl, empRef))
 }
 
