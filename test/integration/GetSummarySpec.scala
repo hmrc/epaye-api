@@ -18,39 +18,65 @@ package integration
 
 import play.api.libs.json.Json
 import uk.gov.hmrc.epayeapi.models.Formats._
-import uk.gov.hmrc.epayeapi.models.in.EpayeEmpRefsResponse
-import uk.gov.hmrc.epayeapi.models.out.{ApiErrorJson, EmpRefsJson}
+import uk.gov.hmrc.epayeapi.models.out.ApiErrorJson
 
-class GetEmpRefsSpec
+class GetSummarySpec
   extends IntegrationTestBase {
 
-  trait Setup {
-    val url = baseUrl
-    val apiBaseUrl = app.configuration.underlying.getString("api.baseUrl")
-    val empRefs = for (_ <- 1 to 5) yield getEmpRef
-    lazy val empRefJson = Json.toJson(EpayeEmpRefsResponse(empRefs)).toString()
-  }
-
-  "The EmpRefs API" should {
-    "return 200 OK with a list of empRefs" in new Setup {
+  "The summary endpoint" should {
+    "return 200 OK on active enrolments" in new Setup {
       given()
-        .client.isAuthorized
+        .clientWith(empRef).isAuthorized
         .and()
-        .epayeEmpRefsEndpointReturns(empRefJson)
+        .epayeAnnualStatementReturns(
+          """
+            |{
+            |  "rti": {
+            |    "totals": {
+            |      "balance": 100
+            |    }
+            |  },
+            |  "nonRti": {
+            |    "totals": {
+            |      "balance": 23
+            |    }
+            |  }
+            |}
+          """.stripMargin
+        )
         .when()
         .get(url)
-        .withAuthHeader()
         .thenAssertThat()
         .statusCodeIs(200)
-        .bodyIsOfJson(Json.toJson(EmpRefsJson.fromSeq(apiBaseUrl, empRefs)))
+        .bodyIsOfJson(Json.parse(
+          s"""
+             |{
+             |  "outstandingCharges": {
+             |    "amount": 123,
+             |    "breakdown": {
+             |      "rti": 100,
+             |      "nonRti": 23
+             |    }
+             |  },
+             |  "_links" : {
+             |    "empRefs": {
+             |      "href": "$apiBaseUrl/organisations/paye/"
+             |    },
+             |    "self": {
+             |      "href": "$apiBaseUrl/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}"
+             |    }
+             |  }
+             |}
+        """.stripMargin
+        ))
+
     }
 
-
-    "return 500 Internal Server error if upstream returns invalid JSON" in new Setup {
+    "return 500 Internal Server Error if upstream returns invalid JSON" in new Setup {
       given()
-        .client.isAuthorized
+        .clientWith(empRef).isAuthorized
         .and()
-        .epayeEmpRefsEndpointReturns("""{not json}""")
+        .epayeAnnualStatementReturns("{not json}")
         .when()
         .get(url)
         .withAuthHeader()
@@ -61,9 +87,9 @@ class GetEmpRefsSpec
 
     "return 404 Not Found if upstream returns a 404" in new Setup {
       given()
-        .client.isAuthorized
+        .clientWith(empRef).isAuthorized
         .and()
-        .epayeEmpRefsEndpointReturns(404, "")
+        .epayeAnnualStatementReturns(404, "")
         .when()
         .get(url)
         .withAuthHeader()
@@ -75,9 +101,9 @@ class GetEmpRefsSpec
     "return a 500 Internal Server Error on errors from upstream" in new Setup {
       for (status <- Seq(400, 401, 402, 403, 502, 503)) {
         given()
-          .client.isAuthorized
+          .clientWith(empRef).isAuthorized
           .and()
-          .epayeEmpRefsEndpointReturns(status, "")
+          .epayeAnnualStatementReturns(status, "")
           .when()
           .get(url)
           .withAuthHeader()
@@ -90,5 +116,11 @@ class GetEmpRefsSpec
 
   it should new Setup {
     haveAuthentication(url)
+  }
+
+  trait Setup {
+    val empRef = getEmpRef
+    val url = s"$baseUrl/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}"
+    val apiBaseUrl = app.configuration.underlying.getString("api.baseUrl")
   }
 }

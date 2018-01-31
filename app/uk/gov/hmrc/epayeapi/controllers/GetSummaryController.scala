@@ -19,16 +19,14 @@ package uk.gov.hmrc.epayeapi.controllers
 import javax.inject.{Inject, Singleton}
 
 import akka.stream.Materializer
-import play.api.Logger
 import play.api.libs.json.Json
-import play.api.mvc.{Action, EssentialAction}
+import play.api.mvc.{Action, EssentialAction, Result}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.epayeapi.connectors.{EpayeApiConfig, EpayeConnector}
 import uk.gov.hmrc.epayeapi.models.Formats._
-import uk.gov.hmrc.epayeapi.models.in.{EpayeJsonError, EpayeNotFound, EpayeResponse, EpayeSuccess}
-import uk.gov.hmrc.epayeapi.models.out.ApiErrorJson.EmpRefNotFound
-import uk.gov.hmrc.epayeapi.models.out.{ApiErrorJson, SummaryJson}
+import uk.gov.hmrc.epayeapi.models.in._
+import uk.gov.hmrc.epayeapi.models.out.SummaryJson
 
 import scala.concurrent.ExecutionContext
 
@@ -40,23 +38,20 @@ case class GetSummaryController @Inject() (
   implicit val ec: ExecutionContext,
   implicit val mat: Materializer
 )
-  extends ApiController {
+  extends ApiController
+  with EpayeErrorHandler {
 
   def getSummary(empRef: EmpRef): EssentialAction =
     EmpRefAction(empRef) {
       Action.async { request =>
         epayeConnector.getTotal(empRef, hc(request)).map {
-          case EpayeSuccess(totals) =>
-            Ok(Json.toJson(SummaryJson(config.apiBaseUrl, empRef, totals)))
-          case EpayeJsonError(err) =>
-            Logger.error(s"Upstream returned invalid json: $err")
-            InternalServerError(Json.toJson(ApiErrorJson.InternalServerError))
-          case EpayeNotFound() =>
-            NotFound(Json.toJson(EmpRefNotFound))
-          case error: EpayeResponse[_] =>
-            Logger.error(s"Error while fetching totals: $error")
-            InternalServerError(Json.toJson(ApiErrorJson.InternalServerError))
+          successHandler(empRef) orElse errorHandler
         }
       }
     }
+
+  def successHandler(empRef: EmpRef): PartialFunction[EpayeResponse[EpayeTotalsResponse], Result] = {
+    case EpayeSuccess(totals) =>
+      Ok(Json.toJson(SummaryJson(config.apiBaseUrl, empRef, totals)))
+  }
 }

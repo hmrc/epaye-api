@@ -44,7 +44,7 @@ types:
     get:
       is: [ headers.acceptHeader ]
       displayName: Get access to ePAYE data
-      description: This resource is the entry point to the ePAYE API. It will return a set of URLs, allowing you to access ePAYE data for each account. This will include the employer's ePAYE balance, monthly totals of RTI charges, non-RTI charges and a breakdown of individual charges.
+      description: This resource is the entry point to the ePAYE API. It will return a set of endpoints, allowing you to access ePAYE data for each account. This will include the employer's PAYE balance, monthly totals of RTI charges, non-RTI charges and a breakdown of individual charges.
       (annotations.scope): "read:epaye"
       securedBy: [ sec.oauth_2_0: { scopes: [ "read:epaye" ] } ]
       responses:
@@ -110,7 +110,7 @@ types:
         type: string
         example: "A000001"
       taxYear:
-        description: The tax year...
+        description: The tax year
         type: string
         example: "2017-18"
     get:

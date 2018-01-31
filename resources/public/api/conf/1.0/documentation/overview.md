@@ -7,4 +7,4 @@ This API retrieves data about [Pay As You Earn for employers (ePAYE)](https://ww
 
 This information is intended for use by employers and their agents to check their own calculations of their clients' tax liability.
 
-This version of the API is currently in development and is very likely to be enhanced.
+

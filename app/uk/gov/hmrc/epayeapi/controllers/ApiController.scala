@@ -17,11 +17,12 @@
 package uk.gov.hmrc.epayeapi.controllers
 
 import akka.stream.Materializer
+import play.api.Logger
 import play.api.libs.json.Json
 import play.api.libs.streams.Accumulator
 import play.api.mvc._
 import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.retrieve.{Retrieval, Retrievals}
+import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.epayeapi.models.Formats._
 import uk.gov.hmrc.epayeapi.models.out.ApiErrorJson
@@ -43,37 +44,22 @@ trait ApiController extends BaseController with AuthorisedFunctions {
       Accumulator.done {
         authorised(enrolment) {
           action(request).run()
-        } recover recoverAuthFailure
-      }
-    }
-
-  def EnrolmentsAction(enrolment: Enrolment, retrieveEnrolments: Retrieval[Enrolments])(action: Enrolments => EssentialAction): EssentialAction = {
-    EssentialAction { implicit request =>
-      Accumulator.done {
-        authorised(enrolment.withDelegatedAuthRule("epaye-auth"))
-          .retrieve(retrieveEnrolments) { enrolments =>
-            action(enrolments)(request).run()
-          } recover recoverAuthFailure
-      }
-    }
-  }
-
-  def EmpRefsAction(action: Set[EmpRef] => EssentialAction): EssentialAction =
-    EnrolmentsAction(epayeEnrolment, epayeRetrieval) { enrolments =>
-      EssentialAction { request =>
-        action(enrolments.enrolments.flatMap(enrolmentToEmpRef))(request)
+        } recover logAuthError(recoverAuthFailure)
       }
     }
 
   def EmpRefAction(empRefFromUrl: EmpRef)(action: EssentialAction): EssentialAction = {
-    EmpRefsAction { empRefsFromAuth =>
-      EssentialAction { request =>
-        empRefsFromAuth.find(_ == empRefFromUrl) match {
-          case Some(empRef) => action(request)
-          case None => Accumulator.done(invalidEmpRef)
-        }
-      }
-    }
+    val enrolment = epayeEnrolment
+      .withEmpRef(empRefFromUrl)
+      .withDelegatedAuth
+
+    AuthorisedAction(enrolment)(action)
+  }
+
+  def logAuthError(pf: PartialFunction[Throwable, Result]): PartialFunction[Throwable, Result] = {
+    case ex: Throwable =>
+      Logger.info("Recovering from auth error:", ex)
+      pf(ex)
   }
 
   def recoverAuthFailure: PartialFunction[Throwable, Result] = {
@@ -97,13 +83,14 @@ trait ApiController extends BaseController with AuthorisedFunctions {
   def invalidEmpRef: Result =
     Forbidden(Json.toJson(InvalidEmpRef))
 
-  private def enrolmentToEmpRef(enrolment: Enrolment): Option[EmpRef] = {
-    for {
-      "IR-PAYE" <- Option(enrolment.key)
-      tn <- enrolment.identifiers.find(_.key == "TaxOfficeNumber")
-      tr <- enrolment.identifiers.find(_.key == "TaxOfficeReference")
-      if enrolment.isActivated
-    } yield EmpRef(tn.value, tr.value)
+  implicit class EnrolmentOps(val enrolment: Enrolment) {
+    def withDelegatedAuth: Enrolment =
+      enrolment.withDelegatedAuthRule("epaye-auth")
+
+    def withEmpRef(empRef: EmpRef): Enrolment =
+      enrolment
+        .withIdentifier("TaxOfficeNumber", empRef.taxOfficeNumber)
+        .withIdentifier("TaxOfficeReference", empRef.taxOfficeReference)
   }
 }
 
