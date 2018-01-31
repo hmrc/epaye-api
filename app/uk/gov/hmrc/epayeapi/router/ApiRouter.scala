@@ -15,7 +15,7 @@
  */
 
 package uk.gov.hmrc.epayeapi.router
-
+import ApiRouter._
 import javax.inject.{Inject, Singleton}
 
 import play.api.routing.Router.Routes
@@ -34,28 +34,6 @@ case class ApiRouter @Inject() (
   getMonthlyStatementController: GetMonthlyStatementController
 ) extends SimpleRouter {
 
-  object TaxOfficeNumber {
-    val regex = "([0-9a-zA-Z]{3})".r
-    def unapply(string: String): Option[String] = {
-      string match {
-        case regex(result) => Some(result)
-        case _ => None
-      }
-    }
-  }
-
-
-  object TaxOfficeReference {
-    val regex = "([0-9a-zA-Z]{7,10})".r
-    def unapply(string: String): Option[String] = {
-      string match {
-        case regex(result) => Some(result)
-        case _ => None
-      }
-    }
-  }
-
-
   val appRoutes = Router.from {
     case GET(p"/") =>
       getEmpRefsController.getEmpRefs()
@@ -72,4 +50,26 @@ case class ApiRouter @Inject() (
 
   val routes: Routes = prodRoutes.routes.orElse(appRoutes.routes)
 
+}
+
+object ApiRouter {
+  object TaxOfficeNumber {
+    val regex = "(\\d{3})".r
+    def unapply(string: String): Option[String] = {
+      string match {
+        case regex(result) => Some(result)
+        case _ => None
+      }
+    }
+  }
+
+  object TaxOfficeReference {
+    val regex = "([0-9A-Z]{1,10})".r
+    def unapply(string: String): Option[String] = {
+      string match {
+        case regex(result) => Some(result)
+        case _ => None
+      }
+    }
+  }
 }
