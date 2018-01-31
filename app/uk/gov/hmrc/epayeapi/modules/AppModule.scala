@@ -32,7 +32,6 @@ import uk.gov.hmrc.play.config.ServicesConfig
 class AppModule() extends AbstractModule {
   def configure(): Unit = {
     bind(classOf[PlayAuthConnector]).to(classOf[MicroserviceAuthConnector]).asEagerSingleton()
-//    bind(classOf[WSHttp]).to(classOf[WSHttp]).asEagerSingleton()
     bind(classOf[Startup]).to(classOf[AppStartup]).asEagerSingleton()
   }
 

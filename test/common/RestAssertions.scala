@@ -67,6 +67,23 @@ trait BaseClientGivens[A <: BaseClientGivens[A]] { self: A =>
   }
   def when()(implicit wsClient: WSClient): When = new When(wsClient)
   def and(): A = this
+
+  def epayeEmpRefsEndpointReturns(response: String): A = {
+    epayeEmpRefsEndpointReturns(200, response)
+  }
+
+  def epayeEmpRefsEndpointReturns(status: Int, response: String): A = {
+    stubFor {
+      get(urlPathEqualTo(s"/epaye/self/api/v1/emprefs"))
+        .willReturn {
+          aResponse()
+            .withBody(response)
+            .withHeader("Content-Type", "application/json")
+            .withStatus(status)
+        }
+    }
+    this
+  }
 }
 
 class ClientGivens extends BaseClientGivens[ClientGivens] {
@@ -83,22 +100,7 @@ class ClientGivens extends BaseClientGivens[ClientGivens] {
     this
   }
 
-  def epayeEmpRefsEndpointReturns(response: String): ClientGivens = {
-    epayeEmpRefsEndpointReturns(200, response)
-  }
 
-  def epayeEmpRefsEndpointReturns(status: Int, response: String): ClientGivens = {
-    stubFor {
-      get(urlPathEqualTo(s"/epaye/self/api/v1/emprefs"))
-        .willReturn {
-          aResponse()
-            .withBody(response)
-            .withHeader("Content-Type", "application/json")
-            .withStatus(status)
-        }
-    }
-    this
-  }
 }
 
 class ClientWithEmpRefGivens(empRef: EmpRef) extends BaseClientGivens[ClientWithEmpRefGivens] {
@@ -118,30 +120,38 @@ class ClientWithEmpRefGivens(empRef: EmpRef) extends BaseClientGivens[ClientWith
   }
 
   def epayeAnnualStatementReturns(body: String): ClientWithEmpRefGivens = {
+    epayeAnnualStatementReturns(200, body)
+  }
+
+  def epayeAnnualStatementReturns(status: Int, body: String): ClientWithEmpRefGivens = {
     stubFor(
       get(
         urlPathEqualTo(s"/epaye/${empRef.encodedValue}/api/v1/annual-statement")
       ).willReturn(
-          aResponse()
-            .withBody(body)
-            .withHeader("Content-Type", "application/json")
-            .withStatus(200)
-        )
+        aResponse()
+          .withBody(body)
+          .withHeader("Content-Type", "application/json")
+          .withStatus(status)
+      )
     )
 
     this
   }
 
   def epayeMonthlyStatementReturns(body: String): ClientWithEmpRefGivens = {
+    epayeMonthlyStatementReturns(200, body)
+  }
+
+  def epayeMonthlyStatementReturns(status: Int, body: String): ClientWithEmpRefGivens = {
     stubFor(
       get(
         urlPathEqualTo(s"/epaye/${empRef.encodedValue}/api/v1/monthly-statement")
       ).willReturn(
-          aResponse()
-            .withBody(body)
-            .withHeader("Content-Type", "application/json")
-            .withStatus(200)
-        )
+        aResponse()
+          .withBody(body)
+          .withHeader("Content-Type", "application/json")
+          .withStatus(status)
+      )
     )
 
     this

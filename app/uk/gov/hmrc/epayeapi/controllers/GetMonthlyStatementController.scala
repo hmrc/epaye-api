@@ -19,16 +19,14 @@ package uk.gov.hmrc.epayeapi.controllers
 import javax.inject.{Inject, Singleton}
 
 import akka.stream.Materializer
-import play.api.Logger
 import play.api.libs.json.Json
-import play.api.mvc.{Action, EssentialAction}
+import play.api.mvc.{Action, EssentialAction, Result}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.epayeapi.connectors.{EpayeApiConfig, EpayeConnector}
 import uk.gov.hmrc.epayeapi.models.Formats._
-import uk.gov.hmrc.epayeapi.models.in.{EpayeJsonError, EpayeNotFound, EpayeResponse, EpayeSuccess}
-import uk.gov.hmrc.epayeapi.models.out.ApiErrorJson.EmpRefNotFound
-import uk.gov.hmrc.epayeapi.models.out.{ApiErrorJson, MonthlyStatementJson}
+import uk.gov.hmrc.epayeapi.models.in._
+import uk.gov.hmrc.epayeapi.models.out.MonthlyStatementJson
 import uk.gov.hmrc.epayeapi.models.{TaxMonth, TaxYear}
 
 import scala.concurrent.ExecutionContext
@@ -41,7 +39,8 @@ case class GetMonthlyStatementController @Inject() (
   implicit val ec: ExecutionContext,
   implicit val mat: Materializer
 )
-  extends ApiController {
+  extends ApiController
+  with EpayeErrorHandler {
 
   def getStatement(empRef: EmpRef, taxYear: TaxYear, taxMonth: TaxMonth): EssentialAction =
     EmpRefAction(empRef) {
@@ -52,25 +51,13 @@ case class GetMonthlyStatementController @Inject() (
           taxYear,
           taxMonth
         ).map {
-            case EpayeSuccess(json) =>
-              Ok(Json.toJson(
-                MonthlyStatementJson(
-                  config.apiBaseUrl,
-                  empRef,
-                  taxYear,
-                  taxMonth,
-                  json
-                )
-              ))
-            case EpayeNotFound() =>
-              NotFound(Json.toJson(EmpRefNotFound))
-            case EpayeJsonError(error) =>
-              Logger.error(s"Upstream returned invalid json: $error")
-              InternalServerError(Json.toJson(ApiErrorJson.InternalServerError))
-            case error: EpayeResponse[_] =>
-              Logger.error(s"Error while fetching totals: $error")
-              InternalServerError(Json.toJson(ApiErrorJson.InternalServerError))
+            successHandler(empRef, taxYear, taxMonth) orElse errorHandler
           }
       }
     }
+
+  def successHandler(empRef: EmpRef, taxYear: TaxYear, taxMonth: TaxMonth): PartialFunction[EpayeResponse[EpayeMonthlyStatement], Result] = {
+    case EpayeSuccess(json) =>
+      Ok(Json.toJson(MonthlyStatementJson(config.apiBaseUrl, empRef, taxYear, taxMonth, json)))
+  }
 }

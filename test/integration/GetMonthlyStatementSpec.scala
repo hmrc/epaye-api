@@ -17,40 +17,38 @@
 package integration
 
 import play.api.libs.json.Json
+import uk.gov.hmrc.epayeapi.models.out.ApiErrorJson
 import uk.gov.hmrc.epayeapi.models.Formats._
-import uk.gov.hmrc.epayeapi.models.in.EpayeEmpRefsResponse
-import uk.gov.hmrc.epayeapi.models.out.{ApiErrorJson, EmpRefsJson}
 
-class GetEmpRefsSpec
+import scala.io.Source
+
+
+class GetMonthlyStatementSpec
   extends IntegrationTestBase {
 
-  trait Setup {
-    val url = baseUrl
-    val apiBaseUrl = app.configuration.underlying.getString("api.baseUrl")
-    val empRefs = for (_ <- 1 to 5) yield getEmpRef
-    lazy val empRefJson = Json.toJson(EpayeEmpRefsResponse(empRefs)).toString()
-  }
-
-  "The EmpRefs API" should {
-    "return 200 OK with a list of empRefs" in new Setup {
+  "The monthly statement endpoint" should {
+    "return 200 OK with the found statement" in new Setup {
       given()
-        .client.isAuthorized
+        .clientWith(empRef).isAuthorized
         .and()
-        .epayeEmpRefsEndpointReturns(empRefJson)
+        .epayeMonthlyStatementReturns(getResourceAsString("/epaye/monthly-statement/in/2017-3.json"))
         .when()
         .get(url)
-        .withAuthHeader()
         .thenAssertThat()
         .statusCodeIs(200)
-        .bodyIsOfJson(Json.toJson(EmpRefsJson.fromSeq(apiBaseUrl, empRefs)))
+        .bodyIsOfJson(Json.parse(
+          getResourceAsString("/epaye/monthly-statement/out/2017-3.json")
+            .replaceAllLiterally("%{ton}", empRef.taxOfficeNumber)
+            .replaceAllLiterally("%{tor}", empRef.taxOfficeReference)
+            .replaceAllLiterally("%{apiBaseUrl}", apiBaseUrl)
+        ))
     }
 
-
-    "return 500 Internal Server error if upstream returns invalid JSON" in new Setup {
+    "return 500 Internal Server Error if upstream returns invalid JSON" in new Setup {
       given()
-        .client.isAuthorized
+        .clientWith(empRef).isAuthorized
         .and()
-        .epayeEmpRefsEndpointReturns("""{not json}""")
+        .epayeMonthlyStatementReturns("{not json}")
         .when()
         .get(url)
         .withAuthHeader()
@@ -61,9 +59,9 @@ class GetEmpRefsSpec
 
     "return 404 Not Found if upstream returns a 404" in new Setup {
       given()
-        .client.isAuthorized
+        .clientWith(empRef).isAuthorized
         .and()
-        .epayeEmpRefsEndpointReturns(404, "")
+        .epayeMonthlyStatementReturns(404, "")
         .when()
         .get(url)
         .withAuthHeader()
@@ -71,13 +69,12 @@ class GetEmpRefsSpec
         .statusCodeIs(404)
         .bodyIsOfJson(Json.toJson(ApiErrorJson.EmpRefNotFound))
     }
-
     "return a 500 Internal Server Error on errors from upstream" in new Setup {
       for (status <- Seq(400, 401, 402, 403, 502, 503)) {
         given()
-          .client.isAuthorized
+          .clientWith(empRef).isAuthorized
           .and()
-          .epayeEmpRefsEndpointReturns(status, "")
+          .epayeMonthlyStatementReturns(status, "")
           .when()
           .get(url)
           .withAuthHeader()
@@ -90,5 +87,18 @@ class GetEmpRefsSpec
 
   it should new Setup {
     haveAuthentication(url)
+  }
+
+  trait Setup {
+    val empRef = getEmpRef
+    val url = s"$baseUrl/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2017-18/3"
+    val apiBaseUrl = app.configuration.underlying.getString("api.baseUrl")
+
+    def getResourceAsString(name: String): String =
+      Source.fromURL(getClass.getResource(name), "utf-8").mkString("")
+
+    //    def getResourceAsJson(name: String): JsValue =
+    //      Json.parse(getResourceAsString(name))
+    //  }
   }
 }

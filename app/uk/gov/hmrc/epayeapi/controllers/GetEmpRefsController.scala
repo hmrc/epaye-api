@@ -39,7 +39,8 @@ case class GetEmpRefsController @Inject() (
   implicit val ec: ExecutionContext,
   implicit val mat: Materializer
 )
-  extends ApiController {
+  extends ApiController
+  with EpayeErrorHandler {
 
   def getEmpRefs(): EssentialAction = AuthorisedAction(epayeEnrolment) {
     Action.async { implicit request =>
@@ -52,18 +53,8 @@ case class GetEmpRefsController @Inject() (
 
   def successHandler: PartialFunction[EpayeResponse[EpayeEmpRefsResponse], Result] = {
     case EpayeSuccess(EpayeEmpRefsResponse(empRefs)) =>
+      Logger.error(s"EmpRefs received: $empRefs")
       val empRefsJson = EmpRefsJson.fromSeq(config.apiBaseUrl, empRefs)
       Ok(Json.toJson(empRefsJson))
-  }
-
-  def errorHandler: PartialFunction[EpayeResponse[EpayeEmpRefsResponse], Result] = {
-    case EpayeJsonError(err) =>
-      Logger.error(s"Upstream returned invalid json: $err")
-      InternalServerError(Json.toJson(ApiErrorJson.InternalServerError))
-    case EpayeNotFound() =>
-      NotFound(Json.toJson(EmpRefNotFound))
-    case error: EpayeResponse[_] =>
-      Logger.error(s"Error while fetching totals: $error")
-      InternalServerError(Json.toJson(ApiErrorJson.InternalServerError))
   }
 }
