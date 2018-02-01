@@ -3,27 +3,15 @@
     "fps": {
       "items": [
         {
-          "code": {
-            "main": "2000",
-            "sub": "1020",
-            "name": "RTI_IN_YEAR_CHARGE_NIC1"
-          },
+          "code": "RTI_IN_YEAR_CHARGE_NIC1",
           "amount": 300
         },
         {
-          "code": {
-            "main": "2000",
-            "sub": "1100",
-            "name": "RTI_IN_YEAR_CHARGE_STUDENT_LOAN_DEDUCTION"
-          },
+          "code": "RTI_IN_YEAR_CHARGE_STUDENT_LOAN_DEDUCTION",
           "amount": 300
         },
         {
-          "code": {
-            "main": "2000",
-            "sub": "1000",
-            "name": "RTI_IN_YEAR_CHARGE_INCOME_TAX"
-          },
+          "code": "RTI_IN_YEAR_CHARGE_INCOME_TAX",
           "amount": 500
         }
       ],
@@ -52,19 +40,11 @@
     "eps": {
       "items": [
         {
-          "code": {
-            "main": "2130",
-            "sub": "1355",
-            "name": "RTI_EMPLOYMENT_ALLOWANCE_CHARGE"
-          },
+          "code": "RTI_EMPLOYMENT_ALLOWANCE_CHARGE",
           "amount": 300
         },
         {
-          "code": {
-            "main": "2030",
-            "sub": "1290",
-            "name": "RTI_SHARED_PARENT_PAY"
-          },
+          "code": "RTI_SHARED_PARENT_PAY",
           "amount": 200
         }
       ],
@@ -84,11 +64,7 @@
   "writeOffs": {
     "items": [
       {
-        "code": {
-          "main": "2000",
-          "sub": "1020",
-          "name": "RTI_IN_YEAR_CHARGE_NIC1"
-        },
+        "code": "RTI_IN_YEAR_CHARGE_NIC1",
         "amount": 50
       }
     ],

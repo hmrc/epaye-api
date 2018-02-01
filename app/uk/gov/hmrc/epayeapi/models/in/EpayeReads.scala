@@ -17,12 +17,19 @@
 package uk.gov.hmrc.epayeapi.models.in
 
 import play.api.libs.json.Json.reads
-import play.api.libs.json.{Format, Json, Reads}
+import play.api.libs.json._
 import uk.gov.hmrc.epayeapi.models.TaxYear
 
 trait EpayeReads {
   implicit lazy val taxYearReads: Reads[TaxYear] = reads[TaxYear]
   implicit lazy val epayeTaxMonthReads: Reads[EpayeTaxMonth] = reads[EpayeTaxMonth]
+  implicit lazy val epayeCodeReads: Reads[EpayeCode] = new Reads[EpayeCode]() {
+    override def reads(json: JsValue): JsResult[EpayeCode] =
+      json match {
+        case JsString(name) => JsSuccess(EpayeCode(name))
+        case _ => JsError()
+      }
+  }
 
   implicit lazy val annualTotalReads: Reads[AnnualTotal] = reads[AnnualTotal]
   implicit lazy val lineItemReads: Reads[LineItem] = reads[LineItem]
@@ -40,7 +47,6 @@ trait EpayeReads {
   implicit lazy val epayeMonthlyCreditsReads: Reads[EpayeMonthlyCredits] = reads[EpayeMonthlyCredits]
   implicit lazy val epayeMonthlyChargesDetailsReads: Reads[EpayeMonthlyChargesDetails] = reads[EpayeMonthlyChargesDetails]
   implicit lazy val epayeMonthlyStatementItemReads: Reads[EpayeMonthlyStatementItem] = reads[EpayeMonthlyStatementItem]
-  implicit lazy val epayeCodeReads: Reads[EpayeCode] = reads[EpayeCode]
   implicit lazy val epayeMonthlyPaymentDetailsReads: Reads[EpayeMonthlyPaymentDetails] = reads[EpayeMonthlyPaymentDetails]
   implicit lazy val epayeMonthlyPaymentItemReads: Reads[EpayeMonthlyPaymentItem] = reads[EpayeMonthlyPaymentItem]
   implicit lazy val epayeMonthlyBalanceReads: Reads[EpayeMonthlyBalance] = reads[EpayeMonthlyBalance]
