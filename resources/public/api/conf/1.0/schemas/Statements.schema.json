@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "description": "Statements links for the given empRef",
+  "properties": {
+    "_embedded": {
+      "$ref": "#/definitions/embedded"
+    },
+    "_links": {
+      "$ref": "#/definitions/links"
+    }
+  },
+  "required": [
+    "_embedded",
+    "_links"
+  ],
+  "definitions": {
+    "embedded": {
+      "type": "object",
+      "properties": {
+        "statements": {
+          "$ref": "#/definitions/embeddedStatements"
+        }
+      },
+      "required": [
+        "statements"
+      ]
+    },
+    "embeddedStatements": {
+      "type": "array",
+      "description": "Annual statement links for each registered tax year",
+      "items": {
+        "type": "object",
+        "properties": {
+          "taxYear": {
+            "$ref": "Definitions.schema.json#/definitions/taxYear"
+          },
+          "_links": {
+            "$ref": "#/definitions/annualStatementLinks"
+          }
+        },
+        "required": [
+          "taxYear",
+          "_links"
+        ]
+      }
+    },
+    "annualStatementLinks": {
+      "type": "object",
+      "description": "Links related to this annual statement",
+      "properties": {
+        "self": {
+          "$ref": "Definitions.schema.json#/definitions/link"
+        }
+      },
+      "required": [
+        "self"
+      ]
+    },
+    "links": {
+      "type": "object",
+      "properties": {
+        "empRefs": {
+          "$ref": "Definitions.schema.json#/definitions/link"
+        },
+        "self": {
+          "$ref": "Definitions.schema.json#/definitions/link"
+        }
+      },
+      "required": [
+        "empRefs",
+        "self"
+      ]
+    }
+  }
+}

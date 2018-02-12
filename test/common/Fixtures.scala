@@ -18,8 +18,19 @@ package common
 
 import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.domain.EmpRef
+import uk.gov.hmrc.epayeapi.models.TaxYear
 
 object Fixtures {
+
+  def epayeMasterData(empRef: EmpRef, taxYear: TaxYear): String =
+    s"""
+      |{
+      |  "accountsOfficeReference": "${empRef.toString}",
+      |  "yearRegistered": {
+      |    "yearFrom": ${taxYear.yearFrom}
+      |  }
+      |}
+    """.stripMargin
 
   val epayeAnnualStatement: String =
     """
@@ -195,6 +206,57 @@ object Fixtures {
       |    }
       |  }
       |}
+     """.stripMargin
+  )
+
+  def expectedStatementLinksJson(apiBaseUrl: String, empRef: EmpRef): JsValue = Json.parse(
+    s"""
+       |{
+       |  "_embedded": {
+       |    "statements": [{
+       |      "taxYear": {
+       |        "year": "2016-17",
+       |        "firstDay": "2016-04-06",
+       |        "lastDay": "2017-04-05"
+       |      },
+       |      "_links": {
+       |        "self": {
+       |          "href": "$apiBaseUrl/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2016-17"
+       |        }
+       |      }
+       |    }, {
+       |      "taxYear": {
+       |        "year": "2015-16",
+       |        "firstDay": "2015-04-06",
+       |        "lastDay": "2016-04-05"
+       |      },
+       |      "_links": {
+       |        "self": {
+       |          "href": "$apiBaseUrl/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2015-16"
+       |        }
+       |      }
+       |    }, {
+       |      "taxYear": {
+       |        "year": "2014-15",
+       |        "firstDay": "2014-04-06",
+       |        "lastDay": "2015-04-05"
+       |      },
+       |      "_links": {
+       |        "self": {
+       |          "href": "$apiBaseUrl/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2014-15"
+       |        }
+       |      }
+       |    }]
+       |  },
+       |  "_links": {
+       |    "empRefs": {
+       |      "href": "$apiBaseUrl/organisations/paye/"
+       |    },
+       |    "self": {
+       |      "href": "$apiBaseUrl/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements"
+       |    }
+       |  }
+       |}
      """.stripMargin
   )
 

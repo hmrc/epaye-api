@@ -68,4 +68,10 @@ trait JsonWrites {
   implicit lazy val paymentJsonWrites: Writes[PaymentJson] = writes[PaymentJson]
   implicit lazy val monthlySummaryJsonWrites: Writes[MonthlySummaryJson] = writes[MonthlySummaryJson]
   implicit lazy val monthlyStatementLinksJsonWrites: Writes[MonthlyStatementLinksJson] = writes[MonthlyStatementLinksJson]
+
+  implicit lazy val statementsJsonWrites: Writes[StatementsJson] = writes[StatementsJson]
+  implicit lazy val statementsEmbeddedJsonWrites: Writes[Embedded] = writes[Embedded]
+  implicit lazy val statementsStatementJsonWrites: Writes[Statement] = writes[Statement]
+  implicit lazy val statementsStatementLinksJsonWrites: Writes[Links] = writes[Links]
+  implicit lazy val statementsLinksJsonWrites: Writes[StatementLinks] = writes[StatementLinks]
 }

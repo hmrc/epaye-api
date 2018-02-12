@@ -99,6 +99,40 @@ types:
                       "code" : "INVALID_EMPREF",
                       "message" : "Provided EmpRef is not associated with your account"
                     }
+  /{taxOfficeNumber}/{taxOfficeReference}/statements:
+    uriParameters:
+      taxOfficeNumber:
+        description: A unique identifier made up of tax office number
+        type: string
+        example: "001"
+      taxOfficeReference:
+        description: A unique identifier made up of the tax office reference
+        type: string
+        example: "A000001"
+    get:
+      is: [ headers.acceptHeader ]
+      displayName: Get links to all Annual Statements
+      description: This resource returns links to all available Annual Statements
+      (annotations.scope): "read:epaye"
+      securedBy: [ sec.oauth_2_0: { scopes: [ "read:epaye" ] } ]
+      responses:
+        200:
+          body:
+            application/json:
+              type: !include schemas/Statements.schema.json
+              example: !include examples/Statements.get.json
+        403:
+          body:
+            application/json:
+              type: !include schemas/ErrorCodes.schema.json
+              examples:
+                notOpenStatus:
+                  description: You don't currently have an ePAYE enrolment on this account.
+                  value: |
+                    {
+                      "code" : "INVALID_EMPREF",
+                      "message" : "Provided EmpRef is not associated with your account"
+                    }
   /{taxOfficeNumber}/{taxOfficeReference}/statements/{taxYear}:
     uriParameters:
       taxOfficeNumber:
