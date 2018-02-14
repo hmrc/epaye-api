@@ -65,15 +65,23 @@ case class MonthlyStatementLinksJson(
 )
 
 object MonthlyStatementJson {
+  implicit val chargeOrdering = Ordering.by[ChargeJson, (String, BigDecimal)](charge => (charge.code, -charge.amount))
+
   def apply(apiBaseUrl: String, empRef: EmpRef, taxYear: TaxYear, taxMonth: TaxMonth, json: EpayeMonthlyStatement): MonthlyStatementJson =
     MonthlyStatementJson(
       taxOfficeNumber = empRef.taxOfficeNumber,
       taxOfficeReference = empRef.taxOfficeReference,
       taxYear = taxYear,
       taxMonth = taxMonth,
-      rtiCharges = Charges(json.charges.fps) ++ Charges(json.charges.cis) ++ Charges(json.charges.eps),
+      rtiCharges =
+        Charges(json.charges.fps).sortBy(_.code) ++
+          Charges(json.charges.cis).sortBy(_.code) ++
+          Charges(json.charges.eps).sortBy(_.code),
       interest = if (json.charges.others == 0) Seq.empty else Seq(ChargeJson("INTEREST", json.charges.others)),
-      allocatedCredits = Charges(json.credits.fps) ++ Charges(json.credits.cis) ++ Charges(json.credits.eps),
+      allocatedCredits =
+        Charges(json.credits.fps).sortBy(_.code) ++
+          Charges(json.credits.cis).sortBy(_.code) ++
+          Charges(json.credits.eps).sortBy(_.code),
       allocatedPayments = Payments(json.payments),
       writeOffs = Charges(json.writeOffs),
       dueDate = json.balance.dueDate,
