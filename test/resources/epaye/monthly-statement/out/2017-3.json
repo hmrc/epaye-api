@@ -13,16 +13,16 @@
   },
   "rtiCharges": [
     {
+      "code": "RTI_IN_YEAR_CHARGE_INCOME_TAX",
+      "amount": 500
+    },
+    {
       "code": "RTI_IN_YEAR_CHARGE_NIC1",
       "amount": 300
     },
     {
       "code": "RTI_IN_YEAR_CHARGE_STUDENT_LOAN_DEDUCTION",
       "amount": 300
-    },
-    {
-      "code": "RTI_IN_YEAR_CHARGE_INCOME_TAX",
-      "amount": 500
     }
   ],
   "interest": [],
