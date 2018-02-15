@@ -40,6 +40,11 @@ case class TaxYear(
     firstDay.plusYears(1).minusDays(1)
 }
 
+object TaxYear {
+  def apply(date: LocalDate): TaxYear =
+    TaxYear(TaxYearResolver.taxYearFor(date))
+}
+
 object ExtractTaxYear {
   private lazy val pattern = """20(\d\d)-(\d\d)""".r
 

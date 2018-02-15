@@ -76,5 +76,15 @@ case class EpayeConnector @Inject() (
 
     get[EpayeMonthlyStatement](url, headers)
   }
+
+  def getMasterData(empRef: EmpRef, headers: HeaderCarrier): Future[EpayeResponse[EpayeMasterData]] = {
+    val url =
+      s"${config.epayeBaseUrl}" +
+        s"/epaye" +
+        s"/${empRef.encodedValue}" +
+        s"/api/v1/master-data"
+
+    get[EpayeMasterData](url, headers)
+  }
 }
 

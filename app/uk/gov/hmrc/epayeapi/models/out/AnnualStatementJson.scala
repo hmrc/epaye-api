@@ -150,3 +150,10 @@ object AnnualStatementJson {
     )
 
 }
+
+case class AllAnnualStatementLinksJson(
+  empRefs: Link,
+  self: Link,
+  next: Link,
+  previous: Link
+)

@@ -99,11 +99,24 @@ class ClientGivens extends BaseClientGivens[ClientGivens] {
     }
     this
   }
-
-
 }
 
 class ClientWithEmpRefGivens(empRef: EmpRef) extends BaseClientGivens[ClientWithEmpRefGivens] {
+  def epayeMasterDataReturns(body: String, status: Int = 200): ClientWithEmpRefGivens = {
+    stubFor(
+      get(
+        urlPathEqualTo(s"/epaye/${empRef.encodedValue}/api/v1/master-data")
+      ).willReturn(
+        aResponse()
+          .withBody(body)
+          .withHeader("Content-Type", "application/json")
+          .withStatus(status)
+      )
+    )
+
+    this
+  }
+
   def epayeTotalsReturns(body: String): ClientWithEmpRefGivens = {
     stubFor(
       get(

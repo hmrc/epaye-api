@@ -1,0 +1,46 @@
+{
+  "_embedded": {
+    "statements": [{
+      "taxYear": {
+        "year": "2016-17",
+        "firstDay": "2016-04-06",
+        "lastDay": "2017-04-05"
+      },
+      "_links": {
+        "self": {
+          "href": "https://api.service.hmrc.gov.uk/organisations/paye/001/AB00001/statements/2016-17"
+        }
+      }
+    }, {
+      "taxYear": {
+        "year": "2015-16",
+        "firstDay": "2015-04-06",
+        "lastDay": "2016-04-05"
+      },
+      "_links": {
+        "self": {
+          "href": "https://api.service.hmrc.gov.uk/organisations/paye/001/AB00001/statements/2015-16"
+        }
+      }
+    }, {
+      "taxYear": {
+        "year": "2014-15",
+        "firstDay": "2014-04-06",
+        "lastDay": "2015-04-05"
+      },
+      "_links": {
+        "self": {
+          "href": "https://api.service.hmrc.gov.uk/organisations/paye/001/AB00001/statements/2014-15"
+        }
+      }
+    }]
+  },
+  "_links": {
+    "empRefs": {
+      "href": "https://api.service.hmrc.gov.uk/organisations/paye/"
+    },
+    "self": {
+      "href": "https://api.service.hmrc.gov.uk/organisations/paye/001/AB00001/statements"
+    }
+  }
+}
