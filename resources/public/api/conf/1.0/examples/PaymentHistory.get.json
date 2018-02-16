@@ -1,0 +1,43 @@
+{
+  "taxOfficeNumber": "001",
+  "taxOfficeReference": "AB00001",
+  "taxYear": {
+    "year": "2016-17",
+    "firstDay": "2016-04-06",
+    "lastDay": "2017-04-05"
+  },
+  "payments": [
+    {
+      "paymentDate": "2016-11-08",
+      "amount": 1400.00
+    },
+    {
+      "paymentDate": "2016-09-07",
+      "amount": 900.00
+    },
+    {
+      "paymentDate": "2016-05-17",
+      "amount": 100.00
+    }
+  ],
+  "_links": {
+    "empRefs": {
+      "href": "/organisations/paye/"
+    },
+    "summary": {
+      "href": "/organisations/paye/001/AB00001"
+    },
+    "statements": {
+      "href": "/organisations/paye/001/AB00001/statements"
+    },
+    "self": {
+      "href": "/organisations/paye/001/AB00001/payment-history/2016-17"
+    },
+    "next": {
+      "href": "/organisations/paye/001/AB00001/payment-history/2017-18"
+    },
+    "previous": {
+      "href": "/organisations/paye/001/AB00001/payment-history/2015-16"
+    }
+  }
+}

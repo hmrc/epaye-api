@@ -48,7 +48,7 @@ object StatementsJson {
     def taxYearStatement(taxYear: TaxYear): Statement = {
       Statement(
         taxYear = taxYear,
-        _links = StatementLinks(self = Link.anualStatementLink(empRef, taxYear))
+        _links = StatementLinks(self = Link.annualStatementLink(empRef, taxYear))
       )
     }
 

@@ -29,7 +29,7 @@ case class MonthlyStatementJson(
   rtiCharges: Seq[ChargeJson],
   interest: Seq[ChargeJson],
   allocatedCredits: Seq[ChargeJson],
-  allocatedPayments: Seq[PaymentJson],
+  allocatedPayments: Seq[Payment],
   writeOffs: Seq[ChargeJson],
 dueDate: LocalDate,
   summary: MonthlySummaryJson,
@@ -38,11 +38,6 @@ dueDate: LocalDate,
 
 case class ChargeJson(
   code: String,
-  amount: BigDecimal
-)
-
-case class PaymentJson(
-  paymentDate: LocalDate,
   amount: BigDecimal
 )
 
@@ -101,13 +96,8 @@ object ChargeJson {
 }
 
 object Payments {
-  def apply(payments: EpayeMonthlyPaymentDetails): Seq[PaymentJson] =
-    payments.items.map { PaymentJson.apply }
-}
-
-object PaymentJson {
-  def apply(item: EpayeMonthlyPaymentItem): PaymentJson =
-    new PaymentJson(item.dateOfPayment, item.amount)
+  def apply(payments: EpayeMonthlyPaymentDetails): Seq[Payment] =
+    payments.items.map { case pi: EpayeMonthlyPaymentItem => Payment(pi.dateOfPayment, pi.amount) }
 }
 
 object MonthlySummaryJson {
@@ -130,7 +120,7 @@ object MonthlyStatementLinksJson {
       statements =
         Link.summaryLink(empRef),
       annualStatement =
-        Link.anualStatementLink(empRef, taxYear),
+        Link.annualStatementLink(empRef, taxYear),
       self =
         Link.monthlyStatementLink(empRef, taxYear, taxMonth),
       next =

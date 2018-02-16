@@ -208,6 +208,26 @@
         "RTI_STATUTORY_SICK_PAY",
         "UNALLOCATED_CREDIT"
       ]
+    },
+    "payment": {
+      "type": "object",
+      "description": "A payment made by the client",
+      "title": "Description of a payment received",
+      "properties": {
+        "paymentDate": {
+          "description": "The date the payment was received",
+          "$ref": "Definitions.schema.json#/definitions/date"
+        },
+        "amount": {
+          "description": "The first day of the tax year",
+          "type": "number",
+          "example": "100.23"
+        }
+      },
+      "required": [
+        "paymentDate",
+        "amount"
+      ]
     }
   }
 }

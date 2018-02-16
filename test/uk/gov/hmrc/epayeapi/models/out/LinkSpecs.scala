@@ -22,7 +22,7 @@ import uk.gov.hmrc.play.test.UnitSpec
 
 class LinkSpecs extends UnitSpec {
   val empRef = EmpRefGenerator.getEmpRef
-  
+
   "Links" should {
     "generate the right root link" in {
       Link.empRefsLink shouldEqual Link(s"/organisations/paye/")
@@ -37,7 +37,7 @@ class LinkSpecs extends UnitSpec {
     }
 
     "generate the annual statement link" in {
-      Link.anualStatementLink(empRef, TaxYear(2017)) shouldEqual Link(s"/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2017-18")
+      Link.annualStatementLink(empRef, TaxYear(2017)) shouldEqual Link(s"/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2017-18")
     }
 
     "generate the monthly statement link" in {

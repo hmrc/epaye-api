@@ -25,35 +25,34 @@ import play.api.routing.Router
 import uk.gov.hmrc.epayeapi.models.TaxYear
 import uk.gov.hmrc.epayeapi.router.RoutesProvider
 
-class GetStatementsSpec
+class GetPaymentHistorySpec
   extends WordSpec
-  with Matchers
-  with WSClientSetup
-  with WiremockSetup
-  with EmpRefGenerator
-  with RestAssertions {
+    with Matchers
+    with WSClientSetup
+    with WiremockSetup
+    with EmpRefGenerator
+    with RestAssertions {
 
   override implicit lazy val app: Application =
     new GuiceApplicationBuilder().overrides(bind[Router].toProvider[RoutesProvider]).build()
 
-  "/organisations/epaye/{ton}/{tor}/statements" should {
+  "/organisations/epaye/{ton}/{tor}/payment-history/2016-17" should {
+    val empRef = randomEmpRef()
+    val taxYear = TaxYear(2016)
 
-    "return a response body that conforms to the Statements schema" in {
-      val empRef = randomEmpRef()
-      val taxYear = TaxYear(2017)
+    val paymentHistorySchemaPath = s"${app.path.toURI}/resources/public/api/conf/1.0/schemas/PaymentHistory.schema.json"
 
-      val statementsUrl =
-        s"$baseUrl/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements"
+    val paymentHistoryUrl =
+      s"$baseUrl/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/payment-history/${taxYear.asString}"
 
-      val statementsSchemaPath = s"${app.path.toURI}/resources/public/api/conf/1.0/schemas/Statements.schema.json"
-
+    "return a response body that conforms to the Payment History schema" in {
       given()
         .clientWith(empRef).isAuthorized
-        .and().epayeMasterDataReturns(Fixtures.epayeMasterData(empRef, taxYear))
+        .and().epayePaymentHistoryReturns(Fixtures.epayePaymentHistory(empRef, taxYear))
         .when
-        .get(statementsUrl).withAuthHeader()
+        .get(paymentHistoryUrl).withAuthHeader()
         .thenAssertThat()
-        .bodyIsOfSchema(statementsSchemaPath)
+        .bodyIsOfSchema(paymentHistorySchemaPath)
     }
   }
 }
