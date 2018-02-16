@@ -40,7 +40,6 @@ class GetMonthlyStatementSpec
           getResourceAsString("/epaye/monthly-statement/out/2017-3.json")
             .replaceAllLiterally("%{ton}", empRef.taxOfficeNumber)
             .replaceAllLiterally("%{tor}", empRef.taxOfficeReference)
-            .replaceAllLiterally("%{apiBaseUrl}", apiBaseUrl)
         ))
     }
 
@@ -92,13 +91,8 @@ class GetMonthlyStatementSpec
   trait Setup {
     val empRef = getEmpRef
     val url = s"$baseUrl/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2017-18/3"
-    val apiBaseUrl = app.configuration.underlying.getString("api.baseUrl")
 
     def getResourceAsString(name: String): String =
       Source.fromURL(getClass.getResource(name), "utf-8").mkString("")
-
-    //    def getResourceAsJson(name: String): JsValue =
-    //      Json.parse(getResourceAsString(name))
-    //  }
   }
 }

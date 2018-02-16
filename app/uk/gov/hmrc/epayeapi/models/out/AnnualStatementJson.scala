@@ -94,7 +94,7 @@ case class MonthlyChargesJson(
 
 object MonthlyChargesJson {
 
-  def from(apiBaseUrl: String, lineItem: LineItem, empRef: EmpRef, taxYear: TaxYear): Option[MonthlyChargesJson] = {
+  def from(lineItem: LineItem, empRef: EmpRef, taxYear: TaxYear): Option[MonthlyChargesJson] = {
     for {
       epayeTaxMonth <- lineItem.taxMonth
       taxMonth = TaxMonth(taxYear, epayeTaxMonth.month)
@@ -107,7 +107,7 @@ object MonthlyChargesJson {
       balance = lineItem.balance,
       dueDate = lineItem.dueDate,
       isSpecified = lineItem.isSpecified,
-      _links = SelfLink(Link.monthlyStatementLink(apiBaseUrl, empRef, taxYear, taxMonth))
+      _links = SelfLink(Link.monthlyStatementLink(empRef, taxYear, taxMonth))
     )
   }
 }
@@ -137,15 +137,15 @@ object AnnualStatementJson {
       taxYear = taxYear,
       _embedded = EmbeddedRtiChargesJson(
         EarlierYearUpdateJson.extractFrom(epayeAnnualStatement.rti.lineItems),
-        epayeAnnualStatement.rti.lineItems.flatMap(MonthlyChargesJson.from(apiBaseUrl, _, empRef, taxYear))
+        epayeAnnualStatement.rti.lineItems.flatMap(MonthlyChargesJson.from(_, empRef, taxYear))
       ),
       nonRtiCharges = epayeAnnualStatement.nonRti.lineItems.flatMap(NonRtiChargesJson.from(_, taxYear)),
       _links = AnnualStatementLinksJson(
-        empRefs = Link.empRefsLink(apiBaseUrl),
-        statements = Link.statementsLink(apiBaseUrl, empRef),
-        self = Link.anualStatementLink(apiBaseUrl, empRef, taxYear),
-        next = Link.anualStatementLink(apiBaseUrl, empRef, taxYear.next),
-        previous = Link.anualStatementLink(apiBaseUrl, empRef, taxYear.previous)
+        empRefs = Link.empRefsLink,
+        statements = Link.statementsLink(empRef),
+        self = Link.anualStatementLink(empRef, taxYear),
+        next = Link.anualStatementLink(empRef, taxYear.next),
+        previous = Link.anualStatementLink(empRef, taxYear.previous)
       )
     )
 

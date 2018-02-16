@@ -54,7 +54,7 @@ case class GetStatementsController @Inject()(
 
   def successHandler(empRef: EmpRef): PartialFunction[EpayeResponse[EpayeMasterData], Result] = {
     case EpayeSuccess(EpayeMasterData(_, yearRegistered)) =>
-      val statements = StatementsJson(config.apiBaseUrl, empRef, yearRegistered)
+      val statements = StatementsJson(empRef, yearRegistered)
       Ok(Json.toJson(statements))
   }
 }

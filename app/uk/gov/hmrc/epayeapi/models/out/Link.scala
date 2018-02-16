@@ -24,18 +24,18 @@ case class Link(href: String)
 object Link {
   val prefix = "/organisations/paye"
 
-  def empRefsLink(apiBaseUrl: String): Link =
-    Link(s"$apiBaseUrl$prefix/")
+  def empRefsLink: Link =
+    Link(s"$prefix/")
 
-  def summaryLink(apiBaseUrl: String, empRef: EmpRef): Link =
-    Link(s"$apiBaseUrl$prefix/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}")
+  def summaryLink(empRef: EmpRef): Link =
+    Link(s"$prefix/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}")
 
-  def statementsLink(apiBaseUrl: String, empRef: EmpRef): Link =
-    Link(s"$apiBaseUrl$prefix/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements")
+  def statementsLink(empRef: EmpRef): Link =
+    Link(s"$prefix/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements")
 
-  def anualStatementLink(apiBaseUrl: String, empRef: EmpRef, taxYear: TaxYear): Link =
-    Link(s"$apiBaseUrl$prefix/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/${taxYear.asString}")
+  def anualStatementLink(empRef: EmpRef, taxYear: TaxYear): Link =
+    Link(s"$prefix/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/${taxYear.asString}")
 
-  def monthlyStatementLink(apiBaseUrl: String, empRef: EmpRef, taxYear: TaxYear, taxMonth: TaxMonth): Link =
-    Link(s"$apiBaseUrl$prefix/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/${taxYear.asString}/${taxMonth.asString}")
+  def monthlyStatementLink(empRef: EmpRef, taxYear: TaxYear, taxMonth: TaxMonth): Link =
+    Link(s"$prefix/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/${taxYear.asString}/${taxMonth.asString}")
 }

@@ -52,6 +52,6 @@ case class GetSummaryController @Inject() (
 
   def successHandler(empRef: EmpRef): PartialFunction[EpayeResponse[EpayeTotalsResponse], Result] = {
     case EpayeSuccess(totals) =>
-      Ok(Json.toJson(SummaryJson(config.apiBaseUrl, empRef, totals)))
+      Ok(Json.toJson(SummaryJson(empRef, totals)))
   }
 }

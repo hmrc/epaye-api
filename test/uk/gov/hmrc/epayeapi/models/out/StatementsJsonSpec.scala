@@ -25,17 +25,16 @@ import uk.gov.hmrc.epayeapi.models.out.Link.prefix
 import uk.gov.hmrc.epayeapi.util.TestTimeMachine.withFixedLocalDate
 
 class StatementsJsonSpec extends WordSpec with Matchers {
-  val apiBaseUrl = "[API_BASE_URL]"
   val empRef = EmpRefGenerator.getEmpRef
 
   val _links = Links(
-    empRefs = Link.empRefsLink(apiBaseUrl),
-    self = Link.statementsLink(apiBaseUrl, empRef)
+    empRefs = Link.empRefsLink,
+    self = Link.statementsLink(empRef)
   )
 
   "StatementsJson.apply" should {
     "return a result with empty statements when the year of registration is missing" in {
-      StatementsJson.apply(apiBaseUrl, empRef, None) shouldBe StatementsJson(Embedded(Seq.empty), _links)
+      StatementsJson.apply(empRef, None) shouldBe StatementsJson(Embedded(Seq.empty), _links)
     }
     "return a result with a statement link for the current tax year" in {
       val currentTaxYear = TaxYear(LocalDate.now())
@@ -46,7 +45,7 @@ class StatementsJsonSpec extends WordSpec with Matchers {
       )
       val _embedded = Embedded(Seq(currentTaxYearStatement))
 
-      StatementsJson.apply(apiBaseUrl, empRef, Some(currentTaxYear)) shouldBe StatementsJson(_embedded, _links)
+      StatementsJson.apply(empRef, Some(currentTaxYear)) shouldBe StatementsJson(_embedded, _links)
     }
     "return a result with statement links for 2015, 2016 and 2017" in {
       val yearOfRegistration = 2015
@@ -62,11 +61,11 @@ class StatementsJsonSpec extends WordSpec with Matchers {
 
         val _embedded = Embedded(statements)
 
-        StatementsJson.apply(apiBaseUrl, empRef, Some(TaxYear(yearOfRegistration))) shouldBe StatementsJson(_embedded, _links)
+        StatementsJson.apply(empRef, Some(TaxYear(yearOfRegistration))) shouldBe StatementsJson(_embedded, _links)
       }
     }
   }
 
-  private def annualStatementLink(taxYear: TaxYear, baseUrl: String = apiBaseUrl, eRef: EmpRef = empRef): Link =
-    Link(s"$baseUrl$prefix/${eRef.taxOfficeNumber}/${eRef.taxOfficeReference}/statements/${taxYear.asString}")
+  private def annualStatementLink(taxYear: TaxYear, eRef: EmpRef = empRef): Link =
+    Link(s"$prefix/${eRef.taxOfficeNumber}/${eRef.taxOfficeReference}/statements/${taxYear.asString}")
 }

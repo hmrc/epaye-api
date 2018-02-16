@@ -54,7 +54,7 @@ case class GetEmpRefsController @Inject() (
   def successHandler: PartialFunction[EpayeResponse[EpayeEmpRefsResponse], Result] = {
     case EpayeSuccess(EpayeEmpRefsResponse(empRefs)) =>
       Logger.error(s"EmpRefs received: $empRefs")
-      val empRefsJson = EmpRefsJson.fromSeq(config.apiBaseUrl, empRefs)
+      val empRefsJson = EmpRefsJson.fromSeq(empRefs)
       Ok(Json.toJson(empRefsJson))
   }
 }

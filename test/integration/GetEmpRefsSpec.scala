@@ -26,7 +26,6 @@ class GetEmpRefsSpec
 
   trait Setup {
     val url = baseUrl
-    val apiBaseUrl = app.configuration.underlying.getString("api.baseUrl")
     val empRefs = for (_ <- 1 to 5) yield getEmpRef
     lazy val empRefJson = Json.toJson(EpayeEmpRefsResponse(empRefs)).toString()
   }
@@ -42,7 +41,7 @@ class GetEmpRefsSpec
         .withAuthHeader()
         .thenAssertThat()
         .statusCodeIs(200)
-        .bodyIsOfJson(Json.toJson(EmpRefsJson.fromSeq(apiBaseUrl, empRefs)))
+        .bodyIsOfJson(Json.toJson(EmpRefsJson.fromSeq(empRefs)))
     }
 
 

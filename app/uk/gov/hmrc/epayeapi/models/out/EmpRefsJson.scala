@@ -30,25 +30,23 @@ case class EmbeddedEmpRefs(
 )
 
 object EmpRefsJson {
-  def fromSeq(apiBaseUrl: String, seq: Seq[EmpRef]): EmpRefsJson =
-    EmpRefsJson(EmbeddedEmpRefs(seq.map(EmpRefItem(apiBaseUrl, _))), EmpRefsLinks(apiBaseUrl))
+  def fromSeq(seq: Seq[EmpRef]): EmpRefsJson =
+    EmpRefsJson(EmbeddedEmpRefs(seq.map(EmpRefItem(_))), EmpRefsLinks())
 
-  def apply(apiBaseUrl: String, empRef: EmpRef): EmpRefsJson =
-    fromSeq(apiBaseUrl, Seq(empRef))
+  def apply(empRef: EmpRef): EmpRefsJson = fromSeq(Seq(empRef))
 }
 
 case class EmpRefItem(taxOfficeNumber: String, taxOfficeReference: String, _links: EmpRefLinks)
 
 object EmpRefItem {
-  def apply(apiBaseUrl: String, empRef: EmpRef): EmpRefItem =
-    EmpRefItem(empRef.taxOfficeNumber, empRef.taxOfficeReference, EmpRefLinks(apiBaseUrl, empRef))
+  def apply(empRef: EmpRef): EmpRefItem =
+    EmpRefItem(empRef.taxOfficeNumber, empRef.taxOfficeReference, EmpRefLinks(empRef))
 }
 
 case class EmpRefsLinks(self: Link)
 
 object EmpRefsLinks {
-  def apply(apiBaseUrl: String): EmpRefsLinks =
-    new EmpRefsLinks(self = Link.empRefsLink(apiBaseUrl))
+  def apply(): EmpRefsLinks = new EmpRefsLinks(self = Link.empRefsLink)
 }
 
 case class EmpRefLinks(
@@ -58,12 +56,11 @@ case class EmpRefLinks(
 )
 
 object EmpRefLinks {
-  def apply(apiBaseUrl: String, empRef: EmpRef): EmpRefLinks =
+  def apply(empRef: EmpRef): EmpRefLinks =
     EmpRefLinks(
-      self = Link.summaryLink(apiBaseUrl, empRef),
-      statements = Link.statementsLink(apiBaseUrl, empRef),
-      currentStatement = Link.anualStatementLink(apiBaseUrl, empRef, taxYear = TaxYear(TaxYearResolver.currentTaxYear))
+      self = Link.summaryLink(empRef),
+      statements = Link.statementsLink(empRef),
+      currentStatement = Link.anualStatementLink(empRef, TaxYear(TaxYearResolver.currentTaxYear))
     )
-//    EmpRefLinks(summary = Link.summaryLink(apiBaseUrl, empRef))
 }
 

@@ -60,10 +60,10 @@ class GetSummarySpec
              |  },
              |  "_links" : {
              |    "empRefs": {
-             |      "href": "$apiBaseUrl/organisations/paye/"
+             |      "href": "/organisations/paye/"
              |    },
              |    "self": {
-             |      "href": "$apiBaseUrl/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}"
+             |      "href": "/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}"
              |    }
              |  }
              |}
@@ -121,6 +121,5 @@ class GetSummarySpec
   trait Setup {
     val empRef = getEmpRef
     val url = s"$baseUrl/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}"
-    val apiBaseUrl = app.configuration.underlying.getString("api.baseUrl")
   }
 }

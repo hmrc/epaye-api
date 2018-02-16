@@ -58,7 +58,7 @@ class GetStatementsSpec extends IntegrationTestBase {
              |      },
              |      "_links": {
              |        "self": {
-             |          "href": "https://api.service.hmrc.gov.uk/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2014-15"
+             |          "href": "/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2014-15"
              |        }
              |      }
              |    }, {
@@ -69,7 +69,7 @@ class GetStatementsSpec extends IntegrationTestBase {
              |      },
              |      "_links": {
              |        "self": {
-             |          "href": "https://api.service.hmrc.gov.uk/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2015-16"
+             |          "href": "/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2015-16"
              |        }
              |      }
              |    }, {
@@ -80,17 +80,17 @@ class GetStatementsSpec extends IntegrationTestBase {
              |      },
              |      "_links": {
              |        "self": {
-             |          "href": "https://api.service.hmrc.gov.uk/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2016-17"
+             |          "href": "/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2016-17"
              |        }
              |      }
              |    }]
              |  },
              |  "_links": {
              |    "empRefs": {
-             |      "href": "https://api.service.hmrc.gov.uk/organisations/paye/"
+             |      "href": "/organisations/paye/"
              |    },
              |    "self": {
-             |      "href": "https://api.service.hmrc.gov.uk/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements"
+             |      "href": "/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements"
              |    }
              |  }
              |}
@@ -146,7 +146,6 @@ class GetStatementsSpec extends IntegrationTestBase {
 
   trait Setup {
     val empRef = getEmpRef
-    val apiBaseUrl = app.configuration.underlying.getString("api.baseUrl")
     val url = s"$baseUrl/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements"
   }
 }

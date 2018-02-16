@@ -40,7 +40,7 @@
         "isSpecified": false,
         "_links": {
           "self": {
-            "href": "https://api.service.hmrc.gov.uk/organisations/paye/001/AB00001/statements/2016-17/4"
+            "href": "/organisations/paye/001/AB00001/statements/2016-17/4"
           }
         }
       }
@@ -48,19 +48,19 @@
   },
   "_links": {
     "empRefs": {
-      "href": "https://api.service.hmrc.gov.uk/organisations/paye/"
+      "href": "/organisations/paye/"
     },
     "statements": {
-      "href": "https://api.service.hmrc.gov.uk/organisations/paye/001/AB00001/statements"
+      "href": "/organisations/paye/001/AB00001/statements"
     },
     "self": {
-      "href": "https://api.service.hmrc.gov.uk/organisations/paye/001/AB00001/statements/2016-17"
+      "href": "/organisations/paye/001/AB00001/statements/2016-17"
     },
     "next": {
-      "href": "https://api.service.hmrc.gov.uk/organisations/paye/001/AB00001/statements/2017-18"
+      "href": "/organisations/paye/001/AB00001/statements/2017-18"
     },
     "previous": {
-      "href": "https://api.service.hmrc.gov.uk/organisations/paye/001/AB00001/statements/2015-16"
+      "href": "/organisations/paye/001/AB00001/statements/2015-16"
     }
   }
 }
