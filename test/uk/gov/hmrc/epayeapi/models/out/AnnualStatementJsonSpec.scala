@@ -34,11 +34,11 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
     "contain the right links" in {
       AnnualStatementJson(apiBaseUrl, empRef, taxYear, emptyEpayeAnnualStatement)._links shouldBe
         AnnualStatementLinksJson(
-          empRefs = Link.empRefsLink(apiBaseUrl),
-          statements = Link.statementsLink(apiBaseUrl, empRef),
-          self = Link.anualStatementLink(apiBaseUrl, empRef, taxYear),
-          next = Link.anualStatementLink(apiBaseUrl, empRef, taxYear.next),
-          previous = Link.anualStatementLink(apiBaseUrl, empRef, taxYear.previous)
+          empRefs = Link.empRefsLink,
+          statements = Link.statementsLink(empRef),
+          self = Link.anualStatementLink(empRef, taxYear),
+          next = Link.anualStatementLink(empRef, taxYear.next),
+          previous = Link.anualStatementLink(empRef, taxYear.previous)
         )
     }
   }
@@ -111,7 +111,7 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
           itemType = None
         )
 
-      MonthlyChargesJson.from(apiBaseUrl, lineItem, empRef, taxYear) shouldBe
+      MonthlyChargesJson.from(lineItem, empRef, taxYear) shouldBe
         Some(MonthlyChargesJson(
           taxMonth = TaxMonth(taxYear, taxMonth.month),
           amount = 100,
@@ -121,7 +121,7 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
           balance = 100 - 10 - 20,
           dueDate = dueDate,
           isSpecified = true,
-          _links = SelfLink(Link.monthlyStatementLink(apiBaseUrl, empRef, taxYear, taxMonth))
+          _links = SelfLink(Link.monthlyStatementLink(empRef, taxYear, taxMonth))
         ))
     }
     "return a None if the taxMonth field is None" in {
@@ -141,7 +141,7 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
           itemType = None
         )
 
-      MonthlyChargesJson.from(apiBaseUrl, lineItem, empRef, taxYear) shouldBe None
+      MonthlyChargesJson.from(lineItem, empRef, taxYear) shouldBe None
     }
   }
 

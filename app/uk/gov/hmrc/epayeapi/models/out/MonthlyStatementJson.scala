@@ -86,7 +86,7 @@ object MonthlyStatementJson {
       writeOffs = Charges(json.writeOffs),
       dueDate = json.balance.dueDate,
       summary = MonthlySummaryJson(json),
-      _links = MonthlyStatementLinksJson(apiBaseUrl, empRef, taxYear, taxMonth)
+      _links = MonthlyStatementLinksJson(empRef, taxYear, taxMonth)
     )
 }
 
@@ -123,19 +123,19 @@ object MonthlySummaryJson {
 }
 
 object MonthlyStatementLinksJson {
-  def apply(apiBaseUrl: String, empRef: EmpRef, taxYear: TaxYear, taxMonth: TaxMonth): MonthlyStatementLinksJson =
+  def apply(empRef: EmpRef, taxYear: TaxYear, taxMonth: TaxMonth): MonthlyStatementLinksJson =
     MonthlyStatementLinksJson(
       empRefs =
-        Link.empRefsLink(apiBaseUrl),
+        Link.empRefsLink,
       statements =
-        Link.summaryLink(apiBaseUrl, empRef),
+        Link.summaryLink(empRef),
       annualStatement =
-        Link.anualStatementLink(apiBaseUrl, empRef, taxYear),
+        Link.anualStatementLink(empRef, taxYear),
       self =
-        Link.monthlyStatementLink(apiBaseUrl, empRef, taxYear, taxMonth),
+        Link.monthlyStatementLink(empRef, taxYear, taxMonth),
       next =
-        Link.monthlyStatementLink(apiBaseUrl, empRef, if (taxMonth.isLast) taxYear.next else taxYear, taxMonth.next),
+        Link.monthlyStatementLink(empRef, if (taxMonth.isLast) taxYear.next else taxYear, taxMonth.next),
       previous =
-        Link.monthlyStatementLink(apiBaseUrl, empRef, if (taxMonth.isFirst) taxYear.previous else taxYear, taxMonth.previous)
+        Link.monthlyStatementLink(empRef, if (taxMonth.isFirst) taxYear.previous else taxYear, taxMonth.previous)
     )
 }

@@ -6,13 +6,13 @@
         "taxOfficeReference": "AB00001",
         "_links": {
           "self": {
-            "href": "https://api.service.hmrc.gov.uk/organisations/paye/001/AB00001"
+            "href": "/organisations/paye/001/AB00001"
           },
           "statements": {
-            "href": "https://api.service.hmrc.gov.uk/organisations/paye/001/AB00001/statements"
+            "href": "/organisations/paye/001/AB00001/statements"
           },
           "currentStatement": {
-            "href": "https://api.service.hmrc.gov.uk/organisations/paye/001/AB00001/statements/2017-18"
+            "href": "/organisations/paye/001/AB00001/statements/2017-18"
           }
         }
       },
@@ -21,13 +21,13 @@
         "taxOfficeReference": "CD00002",
         "_links": {
           "self": {
-            "href": "https://api.service.hmrc.gov.uk/organisations/paye/001/CD00002"
+            "href": "/organisations/paye/001/CD00002"
           },
           "statements": {
-            "href": "https://api.service.hmrc.gov.uk/organisations/paye/001/CD00002/statements"
+            "href": "/organisations/paye/001/CD00002/statements"
           },
           "currentStatement": {
-            "href": "https://api.service.hmrc.gov.uk/organisations/paye/001/CD00002/statements/2017-18"
+            "href": "/organisations/paye/001/CD00002/statements/2017-18"
           }
         }
       }
@@ -35,7 +35,7 @@
   },
   "_links": {
     "self": {
-      "href": "https://api.service.hmrc.gov.uk/organisations/paye/"
+      "href": "/organisations/paye/"
     }
   }
 }

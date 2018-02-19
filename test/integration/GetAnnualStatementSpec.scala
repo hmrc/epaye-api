@@ -39,8 +39,6 @@ class GetAnnualStatementSpec extends WordSpec
 
   "AnnualStatement API" should {
     "return a statement containing EYU data" in {
-      val apiBaseUrl = app.configuration.underlying.getString("api.baseUrl")
-
       val empRef = EmpRefGenerator.getEmpRef
 
       val annualStatementUrl =
@@ -56,7 +54,7 @@ class GetAnnualStatementSpec extends WordSpec
         .get(annualStatementUrl).withAuthHeader()
         .thenAssertThat()
         .bodyIsOfJson(
-          Fixtures.expectedAnnualStatementJson(apiBaseUrl, empRef)
+          Fixtures.expectedAnnualStatementJson(empRef)
         )
     }
   }

@@ -44,11 +44,11 @@ case class Links(
 )
 
 object StatementsJson {
-  def apply(apiBaseUrl: String, empRef: EmpRef, taxYearOfRegistration: Option[TaxYear]): StatementsJson = {
+  def apply(empRef: EmpRef, taxYearOfRegistration: Option[TaxYear]): StatementsJson = {
     def taxYearStatement(taxYear: TaxYear): Statement = {
       Statement(
         taxYear = taxYear,
-        _links = StatementLinks(self = Link.anualStatementLink(apiBaseUrl, empRef, taxYear))
+        _links = StatementLinks(self = Link.anualStatementLink(empRef, taxYear))
       )
     }
 
@@ -61,8 +61,8 @@ object StatementsJson {
     } yield taxYearStatement(taxYear)
 
     val links = Links(
-      empRefs = Link.empRefsLink(apiBaseUrl),
-      self = Link.statementsLink(apiBaseUrl, empRef)
+      empRefs = Link.empRefsLink,
+      self = Link.statementsLink(empRef)
     )
 
     StatementsJson(
