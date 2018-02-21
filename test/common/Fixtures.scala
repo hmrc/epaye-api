@@ -119,6 +119,26 @@ object Fixtures {
       |}
     """.stripMargin
 
+  def epayePaymentHistory(empRef: EmpRef, taxYear: TaxYear): String =
+    s"""
+       |{
+       |  "payments": [
+       |    {
+       |      "dateOfPayment": "${taxYear.yearFrom}-06-17",
+       |      "amount": "123.45"
+       |    },
+       |    {
+       |      "dateOfPayment": "${taxYear.yearFrom}-10-07",
+       |      "amount": "456.78"
+       |    },
+       |    {
+       |      "dateOfPayment": "${taxYear.yearFrom}-12-08",
+       |      "amount": "999.00"
+       |    }
+       |  ]
+       |}
+    """.stripMargin
+
   def expectedAnnualStatementJson(empRef: EmpRef): JsValue = Json.parse(
     s"""
       |{
@@ -254,6 +274,54 @@ object Fixtures {
        |    },
        |    "self": {
        |      "href": "/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements"
+       |    }
+       |  }
+       |}
+     """.stripMargin
+  )
+
+  def expectedPaymentHistoryJson(empRef: EmpRef, taxYear: TaxYear): JsValue = Json.parse(
+    s"""
+       |{
+       |  "taxOfficeNumber": "${empRef.taxOfficeNumber}",
+       |  "taxOfficeReference": "${empRef.taxOfficeReference}",
+       |  "taxYear": {
+       |    "year": "${taxYear.asString}",
+       |    "firstDay": "${taxYear.firstDay}",
+       |    "lastDay": "${taxYear.lastDay}"
+       |  },
+       |  "payments": [
+       |    {
+       |      "paymentDate": "${taxYear.yearFrom}-12-08",
+       |      "amount": 999.00
+       |    },
+       |    {
+       |      "paymentDate": "${taxYear.yearFrom}-10-07",
+       |      "amount": 456.78
+       |    },
+       |    {
+       |      "paymentDate": "${taxYear.yearFrom}-06-17",
+       |      "amount": 123.45
+       |    }
+       |  ],
+       |  "_links": {
+       |    "empRefs": {
+       |      "href": "/organisations/paye/"
+       |    },
+       |    "summary": {
+       |      "href": "/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}"
+       |    },
+       |    "statements": {
+       |      "href": "/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements"
+       |    },
+       |    "self": {
+       |      "href": "/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/payment-history/${taxYear.asString}"
+       |    },
+       |    "next": {
+       |      "href": "/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/payment-history/${taxYear.next.asString}"
+       |    },
+       |    "previous": {
+       |      "href": "/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/payment-history/${taxYear.previous.asString}"
        |    }
        |  }
        |}

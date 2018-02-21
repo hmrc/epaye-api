@@ -33,9 +33,12 @@ object Link {
   def statementsLink(empRef: EmpRef): Link =
     Link(s"$prefix/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements")
 
-  def anualStatementLink(empRef: EmpRef, taxYear: TaxYear): Link =
+  def annualStatementLink(empRef: EmpRef, taxYear: TaxYear): Link =
     Link(s"$prefix/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/${taxYear.asString}")
 
   def monthlyStatementLink(empRef: EmpRef, taxYear: TaxYear, taxMonth: TaxMonth): Link =
     Link(s"$prefix/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/${taxYear.asString}/${taxMonth.asString}")
+
+  def paymentHistoryLink(empRef: EmpRef, taxYear: TaxYear): Link =
+    Link(s"$prefix/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/payment-history/${taxYear.asString}")
 }

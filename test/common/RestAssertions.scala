@@ -170,6 +170,21 @@ class ClientWithEmpRefGivens(empRef: EmpRef) extends BaseClientGivens[ClientWith
     this
   }
 
+  def epayePaymentHistoryReturns(body: String, status: Int = 200): ClientWithEmpRefGivens = {
+    stubFor(
+      get(
+        urlPathEqualTo(s"/epaye/${empRef.encodedValue}/api/v1/payment-history")
+      ).willReturn(
+        aResponse()
+          .withBody(body)
+          .withHeader("Content-Type", "application/json")
+          .withStatus(status)
+      )
+    )
+
+    this
+  }
+
   def isAuthorized: ClientWithEmpRefGivens = {
     stubFor(
       post(

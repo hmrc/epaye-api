@@ -36,9 +36,9 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
         AnnualStatementLinksJson(
           empRefs = Link.empRefsLink,
           statements = Link.statementsLink(empRef),
-          self = Link.anualStatementLink(empRef, taxYear),
-          next = Link.anualStatementLink(empRef, taxYear.next),
-          previous = Link.anualStatementLink(empRef, taxYear.previous)
+          self = Link.annualStatementLink(empRef, taxYear),
+          next = Link.annualStatementLink(empRef, taxYear.next),
+          previous = Link.annualStatementLink(empRef, taxYear.previous)
         )
     }
   }

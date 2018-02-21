@@ -1,0 +1,58 @@
+{
+  "type": "object",
+  "properties": {
+    "taxOfficeNumber": {
+      "$ref": "Definitions.schema.json#/definitions/taxOfficeNumber"
+    },
+    "taxOfficeReference": {
+      "$ref": "Definitions.schema.json#/definitions/taxOfficeReference"
+    },
+    "taxYear": {
+      "$ref": "Definitions.schema.json#/definitions/taxYear"
+    },
+    "payments": {
+      "type": "array",
+      "description": "Sequence of payments received in the requested tax year",
+      "items": {
+        "$ref": "Definitions.schema.json#/definitions/payment",
+        "minItems": 0
+      }
+    },
+    "_links": {
+      "type": "object",
+      "properties": {
+        "empRefs": {
+          "$ref": "Definitions.schema.json#/definitions/link"
+        },
+        "summary": {
+          "$ref": "Definitions.schema.json#/definitions/link"
+        },
+        "statements": {
+          "$ref": "Definitions.schema.json#/definitions/link"
+        },
+        "self": {
+          "$ref": "Definitions.schema.json#/definitions/link"
+        },
+        "next": {
+          "$ref": "Definitions.schema.json#/definitions/link"
+        },
+        "previous": {
+          "$ref": "Definitions.schema.json#/definitions/link"
+        }
+      },
+      "required": [
+        "empRefs",
+        "summary",
+        "statements",
+        "self"
+      ]
+    }
+  },
+  "required": [
+    "taxOfficeNumber",
+    "taxOfficeReference",
+    "taxYear",
+    "payments",
+    "_links"
+  ]
+}

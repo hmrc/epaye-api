@@ -53,5 +53,9 @@ trait EpayeReads {
 
   implicit lazy val epayeMasterDataResponse: Reads[EpayeMasterData] = reads[EpayeMasterData]
 
+  implicit lazy val epayePaymentHistoryReads: Reads[EpayePaymentHistory] = reads[EpayePaymentHistory]
+  implicit lazy val epayePaymentHistoryPaymentReads: Reads[EpayePaymentHistoryPayment] = reads[EpayePaymentHistoryPayment]
+
+
   implicit lazy val epayeEmpRefsResponse: Format[EpayeEmpRefsResponse] = Json.format[EpayeEmpRefsResponse]
 }

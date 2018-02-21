@@ -60,7 +60,6 @@ object EmpRefLinks {
     EmpRefLinks(
       self = Link.summaryLink(empRef),
       statements = Link.statementsLink(empRef),
-      currentStatement = Link.anualStatementLink(empRef, TaxYear(TaxYearResolver.currentTaxYear))
+      currentStatement = Link.annualStatementLink(empRef, TaxYear(TaxYearResolver.currentTaxYear))
     )
 }
-
