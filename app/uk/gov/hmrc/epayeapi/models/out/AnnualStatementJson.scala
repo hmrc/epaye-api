@@ -118,6 +118,7 @@ case class SelfLink(
 
 case class AnnualStatementLinksJson(
   empRefs: Link,
+  summary: Link,
   statements: Link,
   self: Link,
   next: Link,
@@ -125,6 +126,8 @@ case class AnnualStatementLinksJson(
 )
 
 case class AnnualStatementJson(
+  taxOfficeNumber: String,
+  taxOfficeReference: String,
   taxYear: TaxYear,
   nonRtiCharges: Seq[NonRtiChargesJson],
   _embedded: EmbeddedRtiChargesJson,
@@ -134,6 +137,8 @@ case class AnnualStatementJson(
 object AnnualStatementJson {
   def apply(apiBaseUrl: String, empRef: EmpRef, taxYear: TaxYear, epayeAnnualStatement: EpayeAnnualStatement): AnnualStatementJson =
     AnnualStatementJson(
+      taxOfficeNumber = empRef.taxOfficeNumber,
+      taxOfficeReference = empRef.taxOfficeReference,
       taxYear = taxYear,
       _embedded = EmbeddedRtiChargesJson(
         EarlierYearUpdateJson.extractFrom(epayeAnnualStatement.rti.lineItems),
@@ -142,6 +147,7 @@ object AnnualStatementJson {
       nonRtiCharges = epayeAnnualStatement.nonRti.lineItems.flatMap(NonRtiChargesJson.from(_, taxYear)),
       _links = AnnualStatementLinksJson(
         empRefs = Link.empRefsLink,
+        summary = Link.summaryLink(empRef),
         statements = Link.statementsLink(empRef),
         self = Link.anualStatementLink(empRef, taxYear),
         next = Link.anualStatementLink(empRef, taxYear.next),
@@ -150,10 +156,3 @@ object AnnualStatementJson {
     )
 
 }
-
-case class AllAnnualStatementLinksJson(
-  empRefs: Link,
-  self: Link,
-  next: Link,
-  previous: Link
-)

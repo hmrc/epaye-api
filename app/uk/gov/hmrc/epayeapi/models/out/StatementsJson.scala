@@ -21,6 +21,8 @@ import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.epayeapi.models.TaxYear
 
 case class StatementsJson(
+  taxOfficeNumber: String,
+  taxOfficeReference: String,
   _embedded: Embedded,
   _links: Links
 )
@@ -66,6 +68,8 @@ object StatementsJson {
     )
 
     StatementsJson(
+      taxOfficeNumber = empRef.taxOfficeNumber,
+      taxOfficeReference = empRef.taxOfficeReference,
       _embedded = Embedded(statements),
       _links = links
     )

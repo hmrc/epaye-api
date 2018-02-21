@@ -35,6 +35,7 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
       AnnualStatementJson(apiBaseUrl, empRef, taxYear, emptyEpayeAnnualStatement)._links shouldBe
         AnnualStatementLinksJson(
           empRefs = Link.empRefsLink,
+          summary = Link.summaryLink(empRef),
           statements = Link.statementsLink(empRef),
           self = Link.anualStatementLink(empRef, taxYear),
           next = Link.anualStatementLink(empRef, taxYear.next),

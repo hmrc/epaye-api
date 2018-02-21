@@ -1,4 +1,6 @@
 {
+  "taxOfficeNumber": "001",
+  "taxOfficeReference": "AB00001",
   "_embedded": {
     "statements": [{
       "taxYear": {

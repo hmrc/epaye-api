@@ -122,6 +122,8 @@ object Fixtures {
   def expectedAnnualStatementJson(empRef: EmpRef): JsValue = Json.parse(
     s"""
       |{
+      |  "taxOfficeNumber": "${empRef.taxOfficeNumber}",
+      |  "taxOfficeReference": "${empRef.taxOfficeReference}",
       |  "taxYear": {
       |    "year": "2017-18",
       |    "firstDay": "2017-04-06",
@@ -192,6 +194,9 @@ object Fixtures {
       |    "empRefs": {
       |      "href": "/organisations/paye/"
       |    },
+      |    "summary": {
+      |      "href": "/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}"
+      |    },
       |    "statements": {
       |      "href": "/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements"
       |    },
@@ -212,6 +217,8 @@ object Fixtures {
   def expectedStatementLinksJson(empRef: EmpRef): JsValue = Json.parse(
     s"""
        |{
+       |  "taxOfficeNumber": "${empRef.taxOfficeNumber}",
+       |  "taxOfficeReference": "${empRef.taxOfficeReference}",
        |  "_embedded": {
        |    "statements": [{
        |      "taxYear": {

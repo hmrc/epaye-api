@@ -3,6 +3,12 @@
   "type": "object",
   "description": "Annual Statement for the requested year",
   "properties": {
+    "taxOfficeNumber": {
+      "$ref": "Definitions.schema.json#/definitions/taxOfficeNumber"
+    },
+    "taxOfficeReference": {
+      "$ref": "Definitions.schema.json#/definitions/taxOfficeReference"
+    },
     "taxYear": {
       "$ref": "Definitions.schema.json#/definitions/taxYear"
     },
@@ -17,6 +23,8 @@
     }
   },
   "required": [
+    "taxOfficeNumber",
+    "taxOfficeReference",
     "taxYear",
     "nonRtiCharges",
     "_embedded",
@@ -132,8 +140,12 @@
           "description": "Link to the list of available empRefs",
           "$ref": "Definitions.schema.json#/definitions/link"
         },
-        "statements": {
+        "summary": {
           "description": "Link to the account summary for the given empRef",
+          "$ref": "Definitions.schema.json#/definitions/link"
+        },
+        "statements": {
+          "description": "Link to the account statements for the given empRef",
           "$ref": "Definitions.schema.json#/definitions/link"
         },
         "self": {
@@ -150,6 +162,7 @@
       },
       "required": [
         "empRefs",
+        "summary",
         "statements",
         "self",
         "next",

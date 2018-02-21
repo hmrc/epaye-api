@@ -64,6 +64,9 @@ class GetSummarySpec
              |    },
              |    "self": {
              |      "href": "/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}"
+             |    },
+             |    "statements": {
+             |      "href": "/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements"
              |    }
              |  }
              |}
