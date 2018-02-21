@@ -50,13 +50,15 @@ object SummaryJson {
 
 case class SummaryLinks(
   empRefs: Link,
-  self: Link
+  self: Link,
+  statements: Link
 )
 
 object SummaryLinks {
   def apply(empRef: EmpRef): SummaryLinks = SummaryLinks(
     Link.empRefsLink,
-    Link.summaryLink(empRef)
+    Link.summaryLink(empRef),
+    Link.statementsLink(empRef)
   )
 }
 

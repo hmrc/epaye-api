@@ -34,7 +34,8 @@ class StatementsJsonSpec extends WordSpec with Matchers {
 
   "StatementsJson.apply" should {
     "return a result with empty statements when the year of registration is missing" in {
-      StatementsJson.apply(empRef, None) shouldBe StatementsJson(Embedded(Seq.empty), _links)
+      StatementsJson.apply(empRef, None) shouldBe
+        StatementsJson(empRef.taxOfficeNumber, empRef.taxOfficeReference, Embedded(Seq.empty), _links)
     }
     "return a result with a statement link for the current tax year" in {
       val currentTaxYear = TaxYear(LocalDate.now())
@@ -45,7 +46,8 @@ class StatementsJsonSpec extends WordSpec with Matchers {
       )
       val _embedded = Embedded(Seq(currentTaxYearStatement))
 
-      StatementsJson.apply(empRef, Some(currentTaxYear)) shouldBe StatementsJson(_embedded, _links)
+      StatementsJson.apply(empRef, Some(currentTaxYear)) shouldBe
+        StatementsJson(empRef.taxOfficeNumber, empRef.taxOfficeReference, _embedded, _links)
     }
     "return a result with statement links for 2015, 2016 and 2017" in {
       val yearOfRegistration = 2015
@@ -61,7 +63,8 @@ class StatementsJsonSpec extends WordSpec with Matchers {
 
         val _embedded = Embedded(statements)
 
-        StatementsJson.apply(empRef, Some(TaxYear(yearOfRegistration))) shouldBe StatementsJson(_embedded, _links)
+        StatementsJson.apply(empRef, Some(TaxYear(yearOfRegistration))) shouldBe
+          StatementsJson(empRef.taxOfficeNumber, empRef.taxOfficeReference, _embedded, _links)
       }
     }
   }

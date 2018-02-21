@@ -3,6 +3,12 @@
   "type": "object",
   "description": "Statements links for the given empRef",
   "properties": {
+    "taxOfficeNumber": {
+      "$ref": "Definitions.schema.json#/definitions/taxOfficeNumber"
+    },
+    "taxOfficeReference": {
+      "$ref": "Definitions.schema.json#/definitions/taxOfficeReference"
+    },
     "_embedded": {
       "$ref": "#/definitions/embedded"
     },
@@ -11,6 +17,8 @@
     }
   },
   "required": [
+    "taxOfficeNumber",
+    "taxOfficeReference",
     "_embedded",
     "_links"
   ],

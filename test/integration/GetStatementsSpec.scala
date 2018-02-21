@@ -49,6 +49,8 @@ class GetStatementsSpec extends IntegrationTestBase {
         .bodyIsOfJson(Json.parse(
           s"""
              |{
+             |  "taxOfficeNumber": "${empRef.taxOfficeNumber}",
+             |  "taxOfficeReference": "${empRef.taxOfficeReference}",
              |  "_embedded": {
              |    "statements": [{
              |      "taxYear": {

@@ -54,6 +54,9 @@
     "empRefs": {
       "href": "/organisations/paye/"
     },
+    "summary": {
+      "href": "/organisations/paye/001/AB00001"
+    },
     "statements": {
       "href": "/organisations/paye/001/AB00001/statements"
     },

@@ -42,6 +42,7 @@
       }
     },
     "writeOffs": {
+      "description": "Adjustments for charges that have been written-off (cancelled) by HMRC. i.e. the charges have been cleared without payment.",
       "$ref": "#/definitions/monthlyItems"
     },
     "dueDate": {
@@ -95,15 +96,19 @@
         "statements": {
           "$ref": "Definitions.schema.json#/definitions/link"
         },
+        "summary": {
+          "$ref": "Definitions.schema.json#/definitions/link"
+        },
         "empRefs": {
           "$ref": "Definitions.schema.json#/definitions/link"
         }
       },
       "required": [
-        "self",
-        "annualStatement",
+        "empRefs",
+        "summary",
         "statements",
-        "empRefs"
+        "annualStatement",
+        "self"
       ]
     }
   },

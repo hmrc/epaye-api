@@ -52,6 +52,7 @@ case class MonthlySummaryJson(
 
 case class MonthlyStatementLinksJson(
   empRefs: Link,
+  summary: Link,
   statements: Link,
   annualStatement: Link,
   self: Link,
@@ -117,8 +118,10 @@ object MonthlyStatementLinksJson {
     MonthlyStatementLinksJson(
       empRefs =
         Link.empRefsLink,
-      statements =
+      summary =
         Link.summaryLink(empRef),
+      statements =
+        Link.statementsLink(empRef),
       annualStatement =
         Link.annualStatementLink(empRef, taxYear),
       self =

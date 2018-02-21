@@ -56,11 +56,16 @@
         "empRefs": {
           "description": "Link to the list of available empRefs",
           "$ref": "Definitions.schema.json#/definitions/link"
+        },
+        "statements": {
+          "description": "Link to the account statements for the given empRef",
+          "$ref": "Definitions.schema.json#/definitions/link"
         }
       },
       "required": [
+        "empRefs",
         "self",
-        "empRefs"
+        "statements"
       ]
     }
   }

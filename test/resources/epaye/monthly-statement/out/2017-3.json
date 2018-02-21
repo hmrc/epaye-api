@@ -61,8 +61,11 @@
     "empRefs": {
       "href": "/organisations/paye/"
     },
-    "statements": {
+    "summary": {
       "href": "/organisations/paye/%{ton}/%{tor}"
+    },
+    "statements": {
+      "href": "/organisations/paye/%{ton}/%{tor}/statements"
     },
     "annualStatement": {
       "href": "/organisations/paye/%{ton}/%{tor}/statements/2017-18"
