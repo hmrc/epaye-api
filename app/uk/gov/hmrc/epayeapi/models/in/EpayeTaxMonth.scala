@@ -16,4 +16,18 @@
 
 package uk.gov.hmrc.epayeapi.models.in
 
+import org.joda.time.LocalDate
+
 case class EpayeTaxMonth(month: Int)
+
+object EpayeTaxMonth {
+  def fromLocalDate(date: LocalDate): EpayeTaxMonth = {
+    val month = if (date.getDayOfMonth < 6) {
+      date.minusMonths(1).getMonthOfYear
+    } else {
+      date.getMonthOfYear
+    }
+
+    EpayeTaxMonth(((month + 8) % 12) + 1)
+  }
+}

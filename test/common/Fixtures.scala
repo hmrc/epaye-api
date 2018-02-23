@@ -139,6 +139,79 @@ object Fixtures {
        |}
     """.stripMargin
 
+  def epayePaymentHistoryWithAllocations(empRef: EmpRef, taxYear: TaxYear): String =
+    s"""
+       |{
+       |  "taxYear": {
+       |    "yearFrom": ${taxYear.yearFrom}
+       |  },
+       |  "payments": [
+       |    {
+       |      "paymentDate": "${taxYear.yearFrom}-06-17",
+       |      "method": "CHEQUE RECEIPTS",
+       |      "amount": 123.45,
+       |      "allocatedAmount": 123.45,
+       |      "allocations": [
+       |        {
+       |          "period": {
+       |            "taxFrom": "${taxYear.firstDay}",
+       |            "taxTo": "${taxYear.firstDay.plusMonths(1).minusDays(1)}"
+       |          },
+       |          "amount": 123.45
+       |        }
+       |      ]
+       |    },
+       |    {
+       |      "paymentDate": "${taxYear.yearFrom}-10-07",
+       |      "method": "BACS RECEIPTS",
+       |      "amount": 456.78,
+       |      "allocatedAmount": 456.78,
+       |      "allocations": [
+       |        {
+       |          "period": {
+       |            "taxFrom": "${taxYear.firstDay.plusMonths(2)}",
+       |            "taxTo": "${taxYear.firstDay.plusMonths(3).minusDays(1)}"
+       |          },
+       |          "amount": 456.78,
+       |          "code": "NON_RTI_ERS_PENALTY_2"
+       |        }
+       |      ]
+       |    },
+       |    {
+       |      "paymentDate": "${taxYear.yearFrom}-12-08",
+       |      "method": "TPS RECEIPTS BY DEBIT CARD",
+       |      "amount": 999.00,
+       |      "allocatedAmount": "888.00",
+       |      "allocations": [
+       |        {
+       |          "period": {
+       |            "taxFrom": "${taxYear.firstDay.plusMonths(2)}",
+       |            "taxTo": "${taxYear.firstDay.plusMonths(3).minusDays(1)}"
+       |          },
+       |          "amount": 444.00,
+       |          "code": "NON_RTI_APPRENTICESHIP_LEVY_INTEREST"
+       |        },
+       |        {
+       |          "period": {
+       |            "taxFrom": "${taxYear.firstDay.plusMonths(2)}",
+       |            "taxTo": "${taxYear.firstDay.plusMonths(3).minusDays(1)}"
+       |          },
+       |          "amount": 111.00,
+       |          "code": "NON_RTI_EI_LATE_REPORT_DAILY_PENALTY"
+       |        },
+       |        {
+       |          "period": {
+       |            "taxFrom": "${taxYear.firstDay.plusMonths(1)}",
+       |            "taxTo": "${taxYear.firstDay.plusMonths(2).minusDays(1)}"
+       |          },
+       |          "amount": 333.00
+       |        }
+       |      ]
+       |    }
+       |  ]
+       |}
+    """.stripMargin
+
   def expectedAnnualStatementJson(empRef: EmpRef): JsValue = Json.parse(
     s"""
       |{
@@ -329,6 +402,137 @@ object Fixtures {
        |    },
        |    "previous": {
        |      "href": "/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/payment-history/${taxYear.previous.asString}"
+       |    }
+       |  }
+       |}
+     """.stripMargin
+  )
+
+  def expectedPaymentHistoryWithAllocationsJson(empRef: EmpRef, taxYear: TaxYear): JsValue = Json.parse(
+    s"""
+       |{
+       |  "taxOfficeNumber": "${empRef.taxOfficeNumber}",
+       |  "taxOfficeReference": "${empRef.taxOfficeReference}",
+       |  "taxYear": {
+       |    "year": "${taxYear.asString}",
+       |    "firstDay": "${taxYear.firstDay}",
+       |    "lastDay": "${taxYear.lastDay}"
+       |  },
+       |  "payments": [
+       |    {
+       |      "paymentDate": "${taxYear.yearFrom}-12-08",
+       |      "method": "Debit Card",
+       |      "amount": 999.00,
+       |      "allocatedAmount": 888.00,
+       |      "allocations": [
+       |        {
+       |          "taxYear": {
+       |            "year": "${taxYear.asString}",
+       |            "firstDay": "${taxYear.yearFrom}-04-06",
+       |            "lastDay": "${taxYear.yearFrom+1}-04-05"
+       |          },
+       |          "taxMonth": {
+       |            "month": 3,
+       |            "firstDay": "${taxYear.yearFrom}-06-06",
+       |            "lastDay": "${taxYear.yearFrom}-07-05"
+       |          },
+       |          "amount": 444.00,
+       |          "code": "NON_RTI_APPRENTICESHIP_LEVY_INTEREST"
+       |        },
+       |        {
+       |          "taxYear": {
+       |            "year": "${taxYear.asString}",
+       |            "firstDay": "${taxYear.yearFrom}-04-06",
+       |            "lastDay": "${taxYear.yearFrom + 1}-04-05"
+       |          },
+       |          "taxMonth": {
+       |            "month": 3,
+       |            "firstDay": "${taxYear.yearFrom}-06-06",
+       |            "lastDay": "${taxYear.yearFrom}-07-05"
+       |          },
+       |          "amount": 111.00,
+       |          "code": "NON_RTI_EI_LATE_REPORT_DAILY_PENALTY"
+       |        },
+       |        {
+       |          "taxYear": {
+       |            "year": "${taxYear.asString}",
+       |            "firstDay": "${taxYear.yearFrom}-04-06",
+       |            "lastDay": "${taxYear.yearFrom+1}-04-05"
+       |          },
+       |          "taxMonth": {
+       |            "month": 2,
+       |            "firstDay": "${taxYear.yearFrom}-05-06",
+       |            "lastDay": "${taxYear.yearFrom}-06-05"
+       |          },
+       |          "amount": 333.00
+       |        }
+       |      ]
+       |    },
+       |    {
+       |      "paymentDate": "${taxYear.yearFrom}-10-07",
+       |      "method": "BACS",
+       |      "amount": 456.78,
+       |      "allocatedAmount": 456.78,
+       |      "allocations": [
+       |        {
+       |          "taxYear": {
+       |            "year": "${taxYear.asString}",
+       |            "firstDay": "${taxYear.yearFrom}-04-06",
+       |            "lastDay": "${taxYear.yearFrom+1}-04-05"
+       |          },
+       |          "taxMonth": {
+       |            "month": 3,
+       |            "firstDay": "${taxYear.yearFrom}-06-06",
+       |            "lastDay": "${taxYear.yearFrom}-07-05"
+       |          },
+       |          "amount": 456.78,
+       |          "code": "NON_RTI_ERS_PENALTY_2"
+       |        }
+       |      ]
+       |    },
+       |    {
+       |      "paymentDate": "${taxYear.yearFrom}-06-17",
+       |      "method": "Cheque",
+       |      "amount": 123.45,
+       |      "allocatedAmount": 123.45,
+       |      "allocations": [
+       |        {
+       |          "taxYear": {
+       |            "year": "${taxYear.asString}",
+       |            "firstDay": "${taxYear.yearFrom}-04-06",
+       |            "lastDay": "${taxYear.yearFrom+1}-04-05"
+       |          },
+       |          "taxMonth": {
+       |            "month": 1,
+       |            "firstDay": "${taxYear.yearFrom}-04-06",
+       |            "lastDay": "${taxYear.yearFrom}-05-05"
+       |          },
+       |          "amount": 123.45
+       |        }
+       |      ]
+       |    }
+       |  ],
+       |  "_links": {
+       |    "empRefs": {
+       |      "href": "/organisations/paye/"
+       |    },
+       |    "summary": {
+       |      "href": "/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}"
+       |    },
+       |    "statements": {
+       |      "href": "/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements"
+       |    },
+       |    "payments": {
+       |      "href": "/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/payment-history/${taxYear.asString}"
+       |    },
+       |    "self": {
+       |      "href": "/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/payment-history/${taxYear.asString}/allocations"
+       |    },
+       |    "next": {
+       |      "href": "/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/payment-history/${taxYear.next.asString}/allocations"
+       |    },
+       |    "previous": {
+       |      "href": "/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/payment-history/${taxYear.previous.asString}/allocations"
        |    }
        |  }
        |}

@@ -16,32 +16,32 @@
 
 package integration
 
-import common.Fixtures.{epayePaymentHistory, expectedPaymentHistoryJson}
+import common.Fixtures.{epayePaymentHistoryWithAllocations, expectedPaymentHistoryWithAllocationsJson}
 import play.api.libs.json.Json
 import uk.gov.hmrc.epayeapi.models.Formats._
 import uk.gov.hmrc.epayeapi.models.TaxYear
 import uk.gov.hmrc.epayeapi.models.out.ApiErrorJson
 
-class GetPaymentHistorySpec extends IntegrationTestBase {
+class GetPaymentHistoryWithAllocationsSpec extends IntegrationTestBase {
 
   "payment-history" should {
     "return 200 OK with payment history" in new Setup {
       given()
         .clientWith(empRef).isAuthorized
         .and()
-        .epayePaymentHistoryReturns(epayePaymentHistory(empRef, taxYear))
+        .epayePaymentHistoryWithAllocationsReturns(epayePaymentHistoryWithAllocations(empRef, taxYear))
         .when()
         .get(url)
         .thenAssertThat()
         .statusCodeIs(200)
-        .bodyIsOfJson(expectedPaymentHistoryJson(empRef, taxYear))
+        .bodyIsOfJson(expectedPaymentHistoryWithAllocationsJson(empRef, taxYear))
     }
 
     "return 500 Internal Server Error if upstream returns invalid JSON" in new Setup {
       given()
         .clientWith(empRef).isAuthorized
         .and()
-        .epayePaymentHistoryReturns("{not json}")
+        .epayePaymentHistoryWithAllocationsReturns("{not json}")
         .when()
         .get(url)
         .withAuthHeader()
@@ -54,7 +54,7 @@ class GetPaymentHistorySpec extends IntegrationTestBase {
       given()
         .clientWith(empRef).isAuthorized
         .and()
-        .epayePaymentHistoryReturns("", 404)
+        .epayePaymentHistoryWithAllocationsReturns("", 404)
         .when()
         .get(url)
         .withAuthHeader()
@@ -68,7 +68,7 @@ class GetPaymentHistorySpec extends IntegrationTestBase {
         given()
           .clientWith(empRef).isAuthorized
           .and()
-          .epayePaymentHistoryReturns("", status)
+          .epayePaymentHistoryWithAllocationsReturns("", status)
           .when()
           .get(url)
           .withAuthHeader()
@@ -86,6 +86,6 @@ class GetPaymentHistorySpec extends IntegrationTestBase {
   trait Setup {
     val empRef = getEmpRef
     implicit val taxYear = TaxYear(2016)
-    val url = s"$baseUrl/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/payment-history/${taxYear.asString}"
+    val url = s"$baseUrl/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/payment-history/${taxYear.asString}/allocations"
   }
 }
