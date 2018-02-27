@@ -31,7 +31,7 @@ case class MonthlyStatementJson(
   allocatedCredits: Seq[ChargeJson],
   allocatedPayments: Seq[Payment],
   writeOffs: Seq[ChargeJson],
-dueDate: LocalDate,
+  dueDate: LocalDate,
   summary: MonthlySummaryJson,
   _links: MonthlyStatementLinksJson
 )
@@ -77,7 +77,9 @@ object MonthlyStatementJson {
       allocatedCredits =
         Charges(json.credits.fps).sortBy(_.code) ++
           Charges(json.credits.cis).sortBy(_.code) ++
-          Charges(json.credits.eps).sortBy(_.code),
+          Charges(json.credits.eps).sortBy(_.code) ++
+          Charges(json.credits.other).sortBy(_.code) ++
+          Charges(json.credits.unknown).sortBy(_.code),
       allocatedPayments = Payments(json.payments),
       writeOffs = Charges(json.writeOffs),
       dueDate = json.balance.dueDate,
@@ -89,6 +91,8 @@ object MonthlyStatementJson {
 object Charges {
   def apply(details: EpayeMonthlyChargesDetails): Seq[ChargeJson] =
     details.items.map { ChargeJson.apply }
+  def apply(details: EpayeMonthlyUnknownCreditsDetails): Seq[ChargeJson] =
+    details.items.map { amount => ChargeJson("UNKNOWN_CREDIT", amount) }
 }
 
 object ChargeJson {

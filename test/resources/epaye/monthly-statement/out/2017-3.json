@@ -34,6 +34,10 @@
     {
       "code": "RTI_SHARED_PARENT_PAY",
       "amount": 200
+    },
+    {
+      "code": "UNKNOWN_CREDIT",
+      "amount": 80
     }
   ],
   "allocatedPayments": [
@@ -52,7 +56,7 @@
   "summary": {
     "amount": 1100,
     "interest": 0,
-    "clearedByCredits": 500,
+    "clearedByCredits": 580,
     "clearedByPayments": 500,
     "clearedByWriteOffs": 50,
     "balance": 50

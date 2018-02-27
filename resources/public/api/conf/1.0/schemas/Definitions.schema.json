@@ -96,6 +96,7 @@
       "description": "The unique identifier for this charge",
       "enum": [
         "INTEREST",
+        "UNKNOWN_CREDIT",
         "NON_RTI_APPRENTICESHIP_LEVY_INTEREST",
         "NON_RTI_CISR_IN_YEAR_INTEREST",
         "NON_RTI_CIS_FIXED_PENALTY",
