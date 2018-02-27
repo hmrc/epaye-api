@@ -39,6 +39,13 @@ case class EpayeMonthlyCredits(
   fps: EpayeMonthlyChargesDetails,
   cis: EpayeMonthlyChargesDetails,
   eps: EpayeMonthlyChargesDetails,
+  other: EpayeMonthlyChargesDetails,
+  unknown: EpayeMonthlyUnknownCreditsDetails,
+  total: BigDecimal
+)
+
+case class EpayeMonthlyUnknownCreditsDetails(
+  items: Seq[BigDecimal],
   total: BigDecimal
 )
 
