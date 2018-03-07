@@ -43,7 +43,10 @@
   "allocatedPayments": [
     {
       "paymentDate": "2017-06-21",
-      "amount": 500
+      "amount": 450
+    },
+    {
+      "amount": 50
     }
   ],
   "writeOffs": [

@@ -18,13 +18,13 @@ package uk.gov.hmrc.epayeapi.models.out
 
 import org.joda.time.LocalDate
 
-import uk.gov.hmrc.epayeapi.models.ImplicitOrderings.localDateDescendingOrdering
+import uk.gov.hmrc.epayeapi.models.ImplicitOrderings.localDateOptionDescendingOrdering
 
 case class Payment(
-  paymentDate: LocalDate,
+  paymentDate: Option[LocalDate],
   amount: BigDecimal
 )
 
 object Payment {
-  implicit val paymentDescendingOrdering = Ordering.by[Payment, (LocalDate, BigDecimal)](payment => (payment.paymentDate, -payment.amount))
+  implicit val paymentDescendingOrdering = Ordering.by[Payment, (Option[LocalDate], BigDecimal)](payment => (payment.paymentDate, -payment.amount))
 }
