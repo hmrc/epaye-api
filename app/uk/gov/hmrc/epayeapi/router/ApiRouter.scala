@@ -33,7 +33,8 @@ case class ApiRouter @Inject() (
   getAnnualStatementController: GetAnnualStatementController,
   getMonthlyStatementController: GetMonthlyStatementController,
   getStatementsController: GetStatementsController,
-  getPaymentHistoryController: GetPaymentHistoryController
+  getPaymentHistoryController: GetPaymentHistoryController,
+  getPaymentHistoryWithAllocationsController: GetPaymentHistoryWithAllocationsController
 ) extends SimpleRouter {
 
   val appRoutes = Router.from {
@@ -54,6 +55,9 @@ case class ApiRouter @Inject() (
 
     case GET(p"/${TaxOfficeNumber(ton)}/${TaxOfficeReference(tor)}/payment-history/${ ExtractTaxYear(taxYear) }") =>
       getPaymentHistoryController.getPaymentHistory(EmpRef(ton, tor), taxYear)
+
+    case GET(p"/${TaxOfficeNumber(ton)}/${TaxOfficeReference(tor)}/payment-history/${ ExtractTaxYear(taxYear) }/allocations") =>
+      getPaymentHistoryWithAllocationsController.getPaymentHistoryWithAllocations(EmpRef(ton, tor), taxYear)
   }
 
   val routes: Routes = prodRoutes.routes.orElse(appRoutes.routes)

@@ -23,6 +23,7 @@ import uk.gov.hmrc.epayeapi.models.TaxYear
 trait EpayeReads {
   implicit lazy val taxYearReads: Reads[TaxYear] = reads[TaxYear]
   implicit lazy val epayeTaxMonthReads: Reads[EpayeTaxMonth] = reads[EpayeTaxMonth]
+  implicit lazy val epayeTaxPeriodReads: Reads[EpayeTaxPeriod] = reads[EpayeTaxPeriod]
   implicit lazy val epayeCodeReads: Reads[EpayeCode] = new Reads[EpayeCode]() {
     override def reads(json: JsValue): JsResult[EpayeCode] =
       json match {
@@ -56,6 +57,19 @@ trait EpayeReads {
 
   implicit lazy val epayePaymentHistoryReads: Reads[EpayePaymentHistory] = reads[EpayePaymentHistory]
   implicit lazy val epayePaymentHistoryPaymentReads: Reads[EpayePaymentHistoryPayment] = reads[EpayePaymentHistoryPayment]
+
+  implicit lazy val epayePaymentHistoryWithAllocationsReads: Reads[EpayePaymentHistoryWithAllocations] = reads[EpayePaymentHistoryWithAllocations]
+  implicit lazy val epayePaymentHistoryWithAllocationsPaymentReads: Reads[EpayePaymentHistoryWithAllocationsPayment] = reads[EpayePaymentHistoryWithAllocationsPayment]
+  implicit lazy val epayeRtiPaymentAllocationReads: Reads[EpayeRtiPaymentAllocation] = reads[EpayeRtiPaymentAllocation]
+  implicit lazy val epayeNonRtiPaymentAllocationReads: Reads[EpayeNonRtiPaymentAllocation] = reads[EpayeNonRtiPaymentAllocation]
+  implicit lazy val epayePaymentAllocationReads: Reads[EpayePaymentAllocation] = new Reads[EpayePaymentAllocation]() {
+    override def reads(json: JsValue): JsResult[EpayePaymentAllocation] = {
+      json \ "code" match {
+        case JsDefined(_) => epayeNonRtiPaymentAllocationReads.reads(json)
+        case _ => epayeRtiPaymentAllocationReads.reads(json)
+      }
+    }
+  }
 
   implicit lazy val epayeEmpRefsResponse: Format[EpayeEmpRefsResponse] = Json.format[EpayeEmpRefsResponse]
 }

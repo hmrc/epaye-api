@@ -27,6 +27,7 @@ import uk.gov.hmrc.epayeapi.models.in.EpayeEmpRefsResponse
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.http.ws.WSHttpResponse
 import uk.gov.hmrc.epayeapi.models.Formats._
+import uk.gov.hmrc.epayeapi.models.TaxYear
 
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -170,10 +171,25 @@ class ClientWithEmpRefGivens(empRef: EmpRef) extends BaseClientGivens[ClientWith
     this
   }
 
-  def epayePaymentHistoryReturns(body: String, status: Int = 200): ClientWithEmpRefGivens = {
+  def epayePaymentHistoryReturns(body: String, status: Int = 200)(implicit taxYear: TaxYear): ClientWithEmpRefGivens = {
     stubFor(
       get(
-        urlPathEqualTo(s"/epaye/${empRef.encodedValue}/api/v1/payment-history")
+        urlPathEqualTo(s"/epaye/${empRef.encodedValue}/api/v1/payment-history/${taxYear.asString}")
+      ).willReturn(
+        aResponse()
+          .withBody(body)
+          .withHeader("Content-Type", "application/json")
+          .withStatus(status)
+      )
+    )
+
+    this
+  }
+
+  def epayePaymentHistoryWithAllocationsReturns(body: String, status: Int = 200)(implicit taxYear: TaxYear): ClientWithEmpRefGivens = {
+    stubFor(
+      get(
+        urlPathEqualTo(s"/epaye/${empRef.encodedValue}/api/v1/payment-history-with-allocations/${taxYear.asString}")
       ).willReturn(
         aResponse()
           .withBody(body)
