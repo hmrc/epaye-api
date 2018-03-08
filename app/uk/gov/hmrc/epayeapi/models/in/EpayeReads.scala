@@ -57,9 +57,6 @@ trait EpayeReads {
 
   implicit lazy val epayePaymentHistoryReads: Reads[EpayePaymentHistory] = reads[EpayePaymentHistory]
   implicit lazy val epayePaymentHistoryPaymentReads: Reads[EpayePaymentHistoryPayment] = reads[EpayePaymentHistoryPayment]
-
-  implicit lazy val epayePaymentHistoryWithAllocationsReads: Reads[EpayePaymentHistoryWithAllocations] = reads[EpayePaymentHistoryWithAllocations]
-  implicit lazy val epayePaymentHistoryWithAllocationsPaymentReads: Reads[EpayePaymentHistoryWithAllocationsPayment] = reads[EpayePaymentHistoryWithAllocationsPayment]
   implicit lazy val epayeRtiPaymentAllocationReads: Reads[EpayeRtiPaymentAllocation] = reads[EpayeRtiPaymentAllocation]
   implicit lazy val epayeNonRtiPaymentAllocationReads: Reads[EpayeNonRtiPaymentAllocation] = reads[EpayeNonRtiPaymentAllocation]
   implicit lazy val epayePaymentAllocationReads: Reads[EpayePaymentAllocation] = new Reads[EpayePaymentAllocation]() {

@@ -19,8 +19,8 @@ package uk.gov.hmrc.epayeapi.models.out
 import common.EmpRefGenerator
 import org.joda.time.LocalDate
 import org.scalatest.{Matchers, WordSpec}
-import uk.gov.hmrc.epayeapi.models.TaxYear
-import uk.gov.hmrc.epayeapi.models.in.{EpayePaymentHistory, EpayePaymentHistoryPayment}
+import uk.gov.hmrc.epayeapi.models.{TaxMonth, TaxYear}
+import uk.gov.hmrc.epayeapi.models.in._
 
 class PaymentHistoryJsonSpec extends WordSpec with Matchers {
   val apiBaseUrl = "[API_BASE_URL]"
@@ -33,13 +33,14 @@ class PaymentHistoryJsonSpec extends WordSpec with Matchers {
       Link.empRefsLink,
       Link.summaryLink(empRef),
       Link.statementsLink(empRef),
+      Link.annualStatementLink(empRef, taxYear),
       Link.paymentHistoryLink(empRef, taxYear),
       Link.paymentHistoryLink(empRef, taxYear.next),
       Link.paymentHistoryLink(empRef, taxYear.previous)
     )
 
     "return empty payment history for tax year 2016-17" in {
-      val epayePaymentHistory = EpayePaymentHistory(Seq.empty)
+      val epayePaymentHistory = EpayePaymentHistory(taxYear, Seq.empty)
 
       val expectedPaymentHistory = PaymentHistoryJson(
         empRef.taxOfficeNumber,
@@ -49,32 +50,58 @@ class PaymentHistoryJsonSpec extends WordSpec with Matchers {
         _links
       )
 
-      PaymentHistoryJson.transform(apiBaseUrl, empRef, taxYear, epayePaymentHistory) shouldBe expectedPaymentHistory
+      PaymentHistoryJson.transform(apiBaseUrl, empRef, taxYear, epayePaymentHistory) shouldBe
+        expectedPaymentHistory
     }
 
     "return payments, sorted by date & amount, for tax year 2016-17" in {
+      val taxMonth1  = EpayeTaxPeriod(taxYear.firstDay, taxYear.firstDay.plusMonths(1).minusDays(1))
+      val taxMonth2  = taxMonth1.plusTaxMonths(1)
+      val taxMonth3  = taxMonth2.plusTaxMonths(1)
+      val taxMonth4  = taxMonth3.plusTaxMonths(1)
+      val taxMonth5  = taxMonth4.plusTaxMonths(1)
+      val taxMonth10 = taxMonth5.plusTaxMonths(5)
+      val taxMonth11 = taxMonth10.plusTaxMonths(1)
 
       val epayePaymentHistory = EpayePaymentHistory(
+        taxYear,
         Seq(
           EpayePaymentHistoryPayment(
-            dateOfPayment = Some(new LocalDate(2016,6,17)),
-            amount = 123.45
+            paymentDate = Some(new LocalDate(2016,6,17)),
+            method = Some("TPS RECEIPTS BY DEBIT CARD"),
+            amount = 123.45,
+            allocatedAmount = 123.45,
+            allocations = Seq(
+              EpayeRtiPaymentAllocation(taxMonth2, 100.00),
+              EpayeRtiPaymentAllocation(taxMonth1,  23.45)
+            )
           ),
           EpayePaymentHistoryPayment(
-            dateOfPayment = None,
-            amount = 666.69
+            paymentDate = Some(new LocalDate(2016,10,7)),
+            method = Some("PAYMENTS MADE BY CHEQUE"),
+            amount = 456.78,
+            allocatedAmount = 456.78,
+            allocations = Seq(
+              EpayeNonRtiPaymentAllocation(taxMonth4, 400.00, Some(EpayeCode("NON_RTI_CIS_FIXED_PENALTY"))),
+              EpayeRtiPaymentAllocation(taxMonth5,  56.78)
+            )
           ),
           EpayePaymentHistoryPayment(
-            dateOfPayment = Some(new LocalDate(2016,10,7)),
-            amount = 456.78
+            paymentDate = Some(new LocalDate(2016,12,8)),
+            method = Some("TPS RECEIPTS BY CREDIT CARD"),
+            amount = 999.00,
+            allocatedAmount = 999.00,
+            allocations = Seq(
+              EpayeRtiPaymentAllocation(taxMonth10, 900.00),
+              EpayeNonRtiPaymentAllocation(taxMonth11,  99.00, Some(EpayeCode("NON_RTI_EI_LATE_REPORT_DAILY_PENALTY")))
+            )
           ),
           EpayePaymentHistoryPayment(
-            dateOfPayment = Some(new LocalDate(2016,12,8)),
-            amount = 999.00
-          ),
-          EpayePaymentHistoryPayment(
-            dateOfPayment = Some(new LocalDate(2016,10,7)),
-            amount = 111.11
+            paymentDate = Some(new LocalDate(2016,10,7)),
+            method = Some("BACS RECEIPTS"),
+            amount = 111.11,
+            allocatedAmount = 111.11,
+            allocations = Seq()
           )
         )
       )
@@ -84,16 +111,31 @@ class PaymentHistoryJsonSpec extends WordSpec with Matchers {
         empRef.taxOfficeReference,
         taxYear,
         Seq(
-          Payment(Some(new LocalDate(2016,12,8)), 999.00),
-          Payment(Some(new LocalDate(2016,10,7)), 456.78),
-          Payment(Some(new LocalDate(2016,10,7)), 111.11),
-          Payment(Some(new LocalDate(2016,6,17)), 123.45),
-          Payment(None, 666.69)
+          PaymentJson(new LocalDate(2016,12,8), Some("Credit Card"), 999.00, 999.00, Seq(
+            PaymentAllocation(taxYear, TaxMonth(taxYear, 10), 900.00, None),
+            PaymentAllocation(taxYear, TaxMonth(taxYear, 11),  99.00, Some("NON_RTI_EI_LATE_REPORT_DAILY_PENALTY"))
+          )),
+          PaymentJson(new LocalDate(2016,10,7), Some("Cheque"), 456.78, 456.78, Seq(
+            PaymentAllocation(taxYear, TaxMonth(taxYear, 4), 400.00, Some("NON_RTI_CIS_FIXED_PENALTY")),
+            PaymentAllocation(taxYear, TaxMonth(taxYear, 5),  56.78, None)
+          )),
+          PaymentJson(new LocalDate(2016,10,7), Some("BACS"), 111.11, 111.11, Seq()),
+          PaymentJson(new LocalDate(2016,6,17), Some("Debit Card"), 123.45, 123.45, Seq(
+            PaymentAllocation(taxYear, TaxMonth(taxYear, 2), 100.00, None),
+            PaymentAllocation(taxYear, TaxMonth(taxYear, 1),  23.45, None)
+          ))
         ),
         _links
       )
 
-      PaymentHistoryJson.transform(apiBaseUrl, empRef, taxYear, epayePaymentHistory) shouldBe expectedPaymentHistory
+      PaymentHistoryJson.transform(apiBaseUrl, empRef, taxYear, epayePaymentHistory) shouldBe
+        expectedPaymentHistory
+    }
+  }
+
+  implicit class EpayeTaxPeriodOps(period: EpayeTaxPeriod) {
+    def plusTaxMonths(months: Int): EpayeTaxPeriod = {
+      period.copy(taxFrom = period.taxFrom.plusMonths(months), taxTo = period.taxTo.plusMonths(months))
     }
   }
 }

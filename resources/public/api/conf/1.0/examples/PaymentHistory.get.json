@@ -9,15 +9,81 @@
   "payments": [
     {
       "paymentDate": "2016-11-08",
-      "amount": 1400.00
+      "amount": 1400.00,
+      "allocatedAmount": 1000.00,
+      "method": "Debit Card",
+      "allocations": [
+        {
+          "taxYear": {
+            "year": "2016-17",
+            "firstDay": "2016-04-06",
+            "lastDay": "2017-04-05"
+          },
+          "taxMonth": {
+            "month": 3,
+            "firstDay": "2016-06-06",
+            "lastDay": "2017-07-05"
+          },
+          "amount": 600.00
+        },
+        {
+          "taxYear": {
+            "year": "2016-17",
+            "firstDay": "2016-04-06",
+            "lastDay": "2017-04-05"
+          },
+          "taxMonth": {
+            "month": 2,
+            "firstDay": "2016-05-06",
+            "lastDay": "2017-06-05"
+          },
+          "amount": 400.00,
+          "code": "NON_RTI_APPRENTICESHIP_LEVY_INTEREST"
+        }
+      ]
     },
     {
       "paymentDate": "2016-09-07",
-      "amount": 900.00
+      "amount": 900.00,
+      "allocatedAmount": 900.00,
+      "method": "BACS",
+      "allocations": [
+        {
+          "taxYear": {
+            "year": "2016-17",
+            "firstDay": "2016-04-06",
+            "lastDay": "2017-04-05"
+          },
+          "taxMonth": {
+            "month": 3,
+            "firstDay": "2016-06-06",
+            "lastDay": "2017-07-05"
+          },
+          "amount": 900.00
+        }
+      ]
     },
     {
       "paymentDate": "2016-05-17",
-      "amount": 100.00
+      "amount": 100.00,
+      "allocatedAmount": 70.00,
+      "method": "Cheque",
+      "allocations": [
+        {
+          "taxYear": {
+            "year": "2016-17",
+            "firstDay": "2016-04-06",
+            "lastDay": "2017-04-05"
+          },
+          "taxMonth": {
+            "month": 1,
+            "firstDay": "2016-04-06",
+            "lastDay": "2017-05-05"
+          },
+          "amount": 70.00,
+          "code": "NON_RTI_CIS_FIXED_PENALTY"
+        }
+      ]
     }
   ],
   "_links": {
@@ -29,6 +95,9 @@
     },
     "statements": {
       "href": "/organisations/paye/001/AB00001/statements"
+    },
+    "statement": {
+      "href": "/organisations/paye/001/AB00001/statements/2016-17"
     },
     "self": {
       "href": "/organisations/paye/001/AB00001/payment-history/2016-17"

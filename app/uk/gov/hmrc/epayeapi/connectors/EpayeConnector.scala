@@ -84,15 +84,9 @@ case class EpayeConnector @Inject() (
   }
 
   def getPaymentHistory(empRef: EmpRef, taxYear: TaxYear, headers: HeaderCarrier): Future[EpayeResponse[EpayePaymentHistory]] = {
-    val url = s"${config.epayeBaseUrl}/epaye/${empRef.encodedValue}/api/v1/payment-history/${taxYear.asString}"
-
-    get[EpayePaymentHistory](url, headers)
-  }
-
-  def getPaymentHistoryWithAllocations(empRef: EmpRef, taxYear: TaxYear, headers: HeaderCarrier): Future[EpayeResponse[EpayePaymentHistoryWithAllocations]] = {
     val url = s"${config.epayeBaseUrl}/epaye/${empRef.encodedValue}/api/v1/payment-history-with-allocations/${taxYear.asString}"
 
-    get[EpayePaymentHistoryWithAllocations](url, headers)
+    get[EpayePaymentHistory](url, headers)
   }
 }
 

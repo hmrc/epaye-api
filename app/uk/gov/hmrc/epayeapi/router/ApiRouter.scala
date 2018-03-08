@@ -33,31 +33,27 @@ case class ApiRouter @Inject() (
   getAnnualStatementController: GetAnnualStatementController,
   getMonthlyStatementController: GetMonthlyStatementController,
   getStatementsController: GetStatementsController,
-  getPaymentHistoryController: GetPaymentHistoryController,
-  getPaymentHistoryWithAllocationsController: GetPaymentHistoryWithAllocationsController
+  getPaymentHistoryController: GetPaymentHistoryController
 ) extends SimpleRouter {
 
   val appRoutes = Router.from {
     case GET(p"/") =>
       getEmpRefsController.getEmpRefs()
 
-    case GET(p"/${TaxOfficeNumber(ton)}/${TaxOfficeReference(tor)}") =>
+    case GET(p"/${ TaxOfficeNumber(ton) }/${ TaxOfficeReference(tor) }") =>
       getSummaryController.getSummary(EmpRef(ton, tor))
 
-    case GET(p"/${TaxOfficeNumber(ton)}/${TaxOfficeReference(tor)}/statements") =>
+    case GET(p"/${ TaxOfficeNumber(ton) }/${ TaxOfficeReference(tor) }/statements") =>
       getStatementsController.getStatements(EmpRef(ton, tor))
 
-    case GET(p"/${TaxOfficeNumber(ton)}/${TaxOfficeReference(tor)}/statements/${ ExtractTaxYear(taxYear) }") =>
+    case GET(p"/${ TaxOfficeNumber(ton) }/${ TaxOfficeReference(tor) }/statements/${ ExtractTaxYear(taxYear) }") =>
       getAnnualStatementController.getAnnualStatement(EmpRef(ton, tor), taxYear)
 
-    case GET(p"/${TaxOfficeNumber(ton)}/${TaxOfficeReference(tor)}/statements/${ ExtractTaxYear(taxYear) }/${ int(month) }") if 1 <= month && month <= 12 =>
+    case GET(p"/${ TaxOfficeNumber(ton) }/${ TaxOfficeReference(tor) }/statements/${ ExtractTaxYear(taxYear) }/${ int(month) }") if 1 <= month && month <= 12 =>
       getMonthlyStatementController.getStatement(EmpRef(ton, tor), taxYear, TaxMonth(taxYear, month))
 
-    case GET(p"/${TaxOfficeNumber(ton)}/${TaxOfficeReference(tor)}/payment-history/${ ExtractTaxYear(taxYear) }") =>
+    case GET(p"/${ TaxOfficeNumber(ton) }/${ TaxOfficeReference(tor) }/payment-history/${ ExtractTaxYear(taxYear) }") =>
       getPaymentHistoryController.getPaymentHistory(EmpRef(ton, tor), taxYear)
-
-    case GET(p"/${TaxOfficeNumber(ton)}/${TaxOfficeReference(tor)}/payment-history/${ ExtractTaxYear(taxYear) }/allocations") =>
-      getPaymentHistoryWithAllocationsController.getPaymentHistoryWithAllocations(EmpRef(ton, tor), taxYear)
   }
 
   val routes: Routes = prodRoutes.routes.orElse(appRoutes.routes)

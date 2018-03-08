@@ -16,9 +16,8 @@
 
 package uk.gov.hmrc.epayeapi.controllers
 
-import javax.inject.{Inject, Singleton}
-
 import akka.stream.Materializer
+import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, EssentialAction, Result}
 import uk.gov.hmrc.auth.core.AuthConnector
@@ -32,7 +31,7 @@ import uk.gov.hmrc.epayeapi.models.out.PaymentHistoryJson
 import scala.concurrent.ExecutionContext
 
 @Singleton
-case class GetPaymentHistoryController @Inject() (
+case class GetPaymentHistoryController @Inject()(
   config: EpayeApiConfig,
   authConnector: AuthConnector,
   epayeConnector: EpayeConnector,

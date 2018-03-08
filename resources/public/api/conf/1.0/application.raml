@@ -246,39 +246,3 @@ types:
                       "code" : "INVALID_EMPREF",
                       "message" : "Provided EmpRef is not associated with your account"
                     }
-  /{taxOfficeNumber}/{taxOfficeReference}/payment-history/{taxYear}/allocations:
-    uriParameters:
-      taxOfficeNumber:
-        description: A unique identifier made up of tax office number
-        type: TaxOfficeNumber
-        example: "001"
-      taxOfficeReference:
-        description: A unique identifier made up of the tax office reference
-        type: TaxOfficeReference
-        example: "A000001"
-      taxYear:
-        type: TaxYear
-        example: "2015-16"
-    get:
-      is: [ headers.acceptHeader ]
-      displayName: Get ePAYE payment history for the requested tax year
-      (annotations.scope): "read:epaye"
-      securedBy: [ sec.oauth_2_0: { scopes: [ "read:epaye" ] } ]
-      responses:
-        200:
-          body:
-            application/json:
-              type: !include schemas/PaymentHistoryWithAllocations.schema.json
-              example: !include examples/PaymentHistoryWithAllocations.get.json
-        403:
-          body:
-            application/json:
-              type: !include schemas/ErrorCodes.schema.json
-              examples:
-                notOpenStatus:
-                  description: You don't currently have an ePAYE enrolment on this account.
-                  value: |
-                    {
-                      "code" : "INVALID_EMPREF",
-                      "message" : "Provided EmpRef is not associated with your account"
-                    }

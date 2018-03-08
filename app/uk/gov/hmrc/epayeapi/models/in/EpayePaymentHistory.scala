@@ -17,11 +17,39 @@
 package uk.gov.hmrc.epayeapi.models.in
 
 import org.joda.time.LocalDate
+import uk.gov.hmrc.epayeapi.models.TaxYear
 
-case class EpayePaymentHistory(payments: Seq[EpayePaymentHistoryPayment])
-
-case class EpayePaymentHistoryPayment(
-  dateOfPayment: Option[LocalDate],
-  amount: BigDecimal
+case class EpayePaymentHistory(
+  taxYear: TaxYear,
+  payments: Seq[EpayePaymentHistoryPayment]
 )
 
+case class EpayePaymentHistoryPayment(
+  paymentDate: Option[LocalDate],
+  method: Option[String],
+  amount: BigDecimal,
+  allocatedAmount: BigDecimal,
+  allocations: Seq[EpayePaymentAllocation]
+)
+
+trait EpayePaymentAllocation {
+  def period: EpayeTaxPeriod
+  def amount: BigDecimal
+  def code: Option[EpayeCode]
+
+  lazy val taxYear: TaxYear = TaxYear(period.startingTaxYear)
+  lazy val taxMonth: EpayeTaxMonth = EpayeTaxMonth.fromLocalDate(period.taxFrom)
+}
+
+case class EpayeRtiPaymentAllocation(
+  period: EpayeTaxPeriod,
+  amount: BigDecimal
+) extends EpayePaymentAllocation {
+  lazy val code: Option[EpayeCode] = None
+}
+
+case class EpayeNonRtiPaymentAllocation(
+  period: EpayeTaxPeriod,
+  amount: BigDecimal,
+  code: Option[EpayeCode]
+) extends EpayePaymentAllocation
