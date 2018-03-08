@@ -65,7 +65,7 @@ case class EpayeMonthlyPaymentDetails(
 )
 
 case class EpayeMonthlyPaymentItem(
-  dateOfPayment: LocalDate,
+  dateOfPayment: Option[LocalDate],
   amount: BigDecimal
 )
 

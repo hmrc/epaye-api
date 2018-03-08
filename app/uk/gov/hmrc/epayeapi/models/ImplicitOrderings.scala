@@ -19,5 +19,14 @@ package uk.gov.hmrc.epayeapi.models
 import org.joda.time.LocalDate
 
 object ImplicitOrderings {
-  implicit val localDateDescendingOrdering = Ordering.by[LocalDate, Long](_.toDate.getTime).reverse
+  implicit val localDateDescendingOrdering: Ordering[LocalDate] = Ordering.by[LocalDate, Long](_.toDate.getTime).reverse
+  implicit val localDateOptionDescendingOrdering: Ordering[Option[LocalDate]] = new Ordering[Option[LocalDate]] {
+    def compare(x: Option[LocalDate], y: Option[LocalDate]): Int =
+      (x, y) match {
+        case (None, None) => 0
+        case (_, None) => -1
+        case (None, _) => 1
+        case (Some(d1), Some(d2)) => localDateDescendingOrdering.compare(d1, d2)
+      }
+  }
 }

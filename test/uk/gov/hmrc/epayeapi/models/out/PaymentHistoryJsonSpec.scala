@@ -61,6 +61,10 @@ class PaymentHistoryJsonSpec extends WordSpec with Matchers {
             amount = 123.45
           ),
           EpayePaymentHistoryPayment(
+            dateOfPayment = None,
+            amount = 666.69
+          ),
+          EpayePaymentHistoryPayment(
             dateOfPayment = Some(new LocalDate(2016,10,7)),
             amount = 456.78
           ),
@@ -80,10 +84,11 @@ class PaymentHistoryJsonSpec extends WordSpec with Matchers {
         empRef.taxOfficeReference,
         taxYear,
         Seq(
-          Payment(new LocalDate(2016,12,8), 999.00),
-          Payment(new LocalDate(2016,10,7), 456.78),
-          Payment(new LocalDate(2016,10,7), 111.11),
-          Payment(new LocalDate(2016,6,17), 123.45)
+          Payment(Some(new LocalDate(2016,12,8)), 999.00),
+          Payment(Some(new LocalDate(2016,10,7)), 456.78),
+          Payment(Some(new LocalDate(2016,10,7)), 111.11),
+          Payment(Some(new LocalDate(2016,6,17)), 123.45),
+          Payment(None, 666.69)
         ),
         _links
       )

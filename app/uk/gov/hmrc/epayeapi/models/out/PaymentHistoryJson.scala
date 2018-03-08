@@ -46,8 +46,7 @@ object PaymentHistoryJson {
 
     val payments: Seq[Payment] = for {
       epayePayment <- epayePaymentHistory.payments
-      epayePaymentDate <- epayePayment.dateOfPayment
-    } yield Payment(epayePaymentDate, epayePayment.amount)
+    } yield Payment(epayePayment.dateOfPayment, epayePayment.amount)
 
     PaymentHistoryJson(
       empRef.taxOfficeNumber,
