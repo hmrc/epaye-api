@@ -18,8 +18,8 @@ package uk.gov.hmrc.epayeapi.models.out
 
 import org.scalatest.{Matchers, WordSpec}
 
-class PaymentWithAllocationsSpec extends WordSpec with Matchers {
-  "PaymentWithAllocationsJson.transform" should {
+class PaymentJsonSpec extends WordSpec with Matchers {
+  "PaymentJson.transform" should {
 
     "convert each payment method code to a text string" in {
 
@@ -45,16 +45,16 @@ class PaymentWithAllocationsSpec extends WordSpec with Matchers {
       )
 
       expectedMappings foreach {
-        case (code, text) => PaymentWithAllocations.transform(Some(code)) shouldBe Some(text)
+        case (code, text) => PaymentJson.transform(Some(code)) shouldBe Some(text)
       }
     }
 
     "convert unknown payment code to UNKNOWN" in {
-      PaymentWithAllocations.transform(Some("Blah")) shouldBe Some("UNKNOWN")
+      PaymentJson.transform(Some("Blah")) shouldBe Some("UNKNOWN")
     }
 
     "convert missing payment code to None" in {
-      PaymentWithAllocations.transform(None) shouldBe None
+      PaymentJson.transform(None) shouldBe None
     }
   }
 }

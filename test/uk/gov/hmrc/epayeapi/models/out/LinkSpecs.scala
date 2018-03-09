@@ -43,5 +43,9 @@ class LinkSpecs extends UnitSpec {
     "generate the monthly statement link" in {
       Link.monthlyStatementLink(empRef, TaxYear(2017), TaxMonth(TaxYear(2017), 1)) shouldEqual Link(s"/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2017-18/1")
     }
+
+    "generate the payment history link" in {
+      Link.paymentHistoryLink(empRef, TaxYear(2017)) shouldEqual Link(s"/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/payment-history/2017-18")
+    }
   }
 }

@@ -77,10 +77,7 @@ trait JsonWrites {
   implicit lazy val statementsLinksJsonWrites: Writes[StatementLinks] = writes[StatementLinks]
 
   implicit lazy val paymentHistoryJsonWrites: Writes[PaymentHistoryJson] = writes[PaymentHistoryJson]
-  implicit lazy val paymentHistoryLinksJsonWrites: Writes[PaymentHistoryLinks] = writes[PaymentHistoryLinks]
-
-  implicit lazy val paymentHistoryWithAllocationsJsonWrites: Writes[PaymentHistoryWithAllocationsJson] = writes[PaymentHistoryWithAllocationsJson]
-  implicit lazy val paymentWithAllocationsJsonWrites: Writes[PaymentWithAllocations] = writes[PaymentWithAllocations]
+  implicit lazy val paymentJsonWrites: Writes[PaymentJson] = writes[PaymentJson]
   implicit lazy val paymentAllocationJsonWrites: Writes[PaymentAllocation] = writes[PaymentAllocation]
-  implicit lazy val paymentHistoryWithAllocationsLinksJsonWrites: Writes[PaymentHistoryWithAllocationsLinks] = writes[PaymentHistoryWithAllocationsLinks]
+  implicit lazy val paymentHistoryLinksJsonWrites: Writes[PaymentHistoryLinks] = writes[PaymentHistoryLinks]
 }

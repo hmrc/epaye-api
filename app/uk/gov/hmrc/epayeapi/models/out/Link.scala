@@ -41,7 +41,4 @@ object Link {
 
   def paymentHistoryLink(empRef: EmpRef, taxYear: TaxYear): Link =
     Link(s"$prefix/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/payment-history/${taxYear.asString}")
-
-  def paymentHistoryWithAllocationsLink(empRef: EmpRef, taxYear: TaxYear): Link =
-    Link(s"$prefix/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/payment-history/${taxYear.asString}/allocations")
 }

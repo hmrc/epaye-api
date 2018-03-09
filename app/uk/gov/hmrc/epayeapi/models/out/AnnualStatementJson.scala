@@ -122,7 +122,8 @@ case class AnnualStatementLinksJson(
   statements: Link,
   self: Link,
   next: Link,
-  previous: Link
+  previous: Link,
+  paymentHistory: Link
 )
 
 case class AnnualStatementJson(
@@ -151,7 +152,8 @@ object AnnualStatementJson {
         statements = Link.statementsLink(empRef),
         self = Link.annualStatementLink(empRef, taxYear),
         next = Link.annualStatementLink(empRef, taxYear.next),
-        previous = Link.annualStatementLink(empRef, taxYear.previous)
+        previous = Link.annualStatementLink(empRef, taxYear.previous),
+        paymentHistory = Link.paymentHistoryLink(empRef, taxYear)
       )
     )
 

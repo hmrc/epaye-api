@@ -44,7 +44,7 @@
             "$ref": "Definitions.schema.json#/definitions/taxYear"
           },
           "_links": {
-            "$ref": "#/definitions/annualStatementLinks"
+            "$ref": "#/definitions/annualStatementLink"
           }
         },
         "required": [
@@ -53,9 +53,9 @@
         ]
       }
     },
-    "annualStatementLinks": {
+    "annualStatementLink": {
       "type": "object",
-      "description": "Links related to this annual statement",
+      "description": "Link related to this annual statement",
       "properties": {
         "self": {
           "$ref": "Definitions.schema.json#/definitions/link"

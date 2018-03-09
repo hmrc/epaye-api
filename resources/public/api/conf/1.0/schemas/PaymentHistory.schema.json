@@ -14,7 +14,7 @@
       "type": "array",
       "description": "Sequence of payments received in the requested tax year",
       "items": {
-        "$ref": "Definitions.schema.json#/definitions/payment",
+        "$ref": "#/definitions/payment",
         "minItems": 0
       }
     },
@@ -28,6 +28,12 @@
           "$ref": "Definitions.schema.json#/definitions/link"
         },
         "statements": {
+          "$ref": "Definitions.schema.json#/definitions/link"
+        },
+        "statement": {
+          "href": "/organisations/paye/001/AB00001/statements/2016-17"
+        },
+        "payments": {
           "$ref": "Definitions.schema.json#/definitions/link"
         },
         "self": {
@@ -54,5 +60,83 @@
     "taxYear",
     "payments",
     "_links"
-  ]
+  ],
+  "definitions": {
+    "payment": {
+      "type": "object",
+      "description": "A payment, with allocations, made by the client",
+      "title": "Description of a payment and allocations received",
+      "properties": {
+        "paymentDate": {
+          "description": "The date the payment was received",
+          "$ref": "Definitions.schema.json#/definitions/date"
+        },
+        "amount": {
+          "description": "The payment amount",
+          "type": "number"
+        },
+        "allocatedAmount": {
+          "description": "The amount from the original payment that has been allocated to charges",
+          "type": "number"
+        },
+        "method": {
+          "description": "Method of payment",
+          "type": "string",
+          "enum": [
+            "Debit Card",
+            "Cheque",
+            "BACS",
+            "CHAPS",
+            "Credit Card",
+            "Direct Debit",
+            "Online Payment",
+            "Bank Lodgement",
+            "Giro Receipts",
+            "Giro Credits",
+            "FPS Receipts",
+            "Internet Receipts",
+            "Girobank",
+            "Post Office",
+            "Nil Declarations",
+            "Paymaster",
+            "Voluntary Payments"
+          ]
+        },
+        "allocations": {
+          "type": "array",
+          "description": "Sequence of allocations made from the payment",
+          "items": {
+            "type": "object",
+            "properties": {
+              "taxYear": {
+                "$ref": "Definitions.schema.json#/definitions/taxYear"
+              },
+              "taxMonth": {
+                "$ref": "Definitions.schema.json#/definitions/taxMonth"
+              },
+              "amount": {
+                "description": "The allocation amount",
+                "type": "number"
+              },
+              "code": {
+                "$ref": "Definitions.schema.json#/definitions/chargeCode"
+              }
+            },
+            "minItems": 0,
+            "required": [
+              "taxYear",
+              "taxMonth",
+              "amount"
+            ]
+          }
+        }
+      },
+      "required": [
+        "paymentDate",
+        "amount",
+        "allocatedAmount",
+        "allocations"
+      ]
+    }
+  }
 }

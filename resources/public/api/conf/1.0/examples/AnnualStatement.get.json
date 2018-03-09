@@ -66,6 +66,9 @@
     },
     "previous": {
       "href": "/organisations/paye/001/AB00001/statements/2015-16"
+    },
+    "paymentHistory": {
+      "href": "/organisations/paye/001/AB00001/payment-history/2016-16"
     }
   }
 }

@@ -174,21 +174,6 @@ class ClientWithEmpRefGivens(empRef: EmpRef) extends BaseClientGivens[ClientWith
   def epayePaymentHistoryReturns(body: String, status: Int = 200)(implicit taxYear: TaxYear): ClientWithEmpRefGivens = {
     stubFor(
       get(
-        urlPathEqualTo(s"/epaye/${empRef.encodedValue}/api/v1/payment-history/${taxYear.asString}")
-      ).willReturn(
-        aResponse()
-          .withBody(body)
-          .withHeader("Content-Type", "application/json")
-          .withStatus(status)
-      )
-    )
-
-    this
-  }
-
-  def epayePaymentHistoryWithAllocationsReturns(body: String, status: Int = 200)(implicit taxYear: TaxYear): ClientWithEmpRefGivens = {
-    stubFor(
-      get(
         urlPathEqualTo(s"/epaye/${empRef.encodedValue}/api/v1/payment-history-with-allocations/${taxYear.asString}")
       ).willReturn(
         aResponse()

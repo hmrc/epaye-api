@@ -158,6 +158,10 @@
         "previous": {
           "description": "Link to the Annual Statement for the previous tax year",
           "$ref": "Definitions.schema.json#/definitions/link"
+        },
+        "paymentHistory": {
+          "description": "Link to the payment history for the given empRef and year",
+          "$ref": "Definitions.schema.json#/definitions/link"
         }
       },
       "required": [
@@ -166,7 +170,8 @@
         "statements",
         "self",
         "next",
-        "previous"
+        "previous",
+        "paymentHistory"
       ]
     },
     "chargeSummary": {
