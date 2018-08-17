@@ -9,7 +9,7 @@ private object AppDependencies {
   private val hmrcTestVersion = "3.0.0"
   private val logbackJsonLoggerVersion = "3.1.0"
   private val metricsGraphiteVersion = "3.0.2"
-  private val microserviceBootstrapVersion = "6.15.0"
+  private val microserviceBootstrapVersion = "6.18.0"
   private val pegdownVersion = "1.6.0"
   private val playConfigVersion = "4.3.0"
   private val playHealthVersion = "2.1.0"
