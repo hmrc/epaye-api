@@ -13,6 +13,6 @@ This information is intended for use by employers and their agents to check thei
 
 This version of the API is currently in development and is very likely to be enhanced.
 
-### License
+#### License
 
 This code is open source software licensed under the [Apache 2.0 License]("http://www.apache.org/licenses/LICENSE-2.0.html")
