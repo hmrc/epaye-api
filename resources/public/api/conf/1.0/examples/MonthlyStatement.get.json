@@ -39,15 +39,20 @@
       "amount": 500
     }
   ],
-  "writeOffs": [],
+  "writeOffs": [
+    {
+      "code": "RTI_IN_YEAR_CHARGE_NIC1",
+      "amount": 100,
+    }
+  ],
   "dueDate": "2016-05-22",
   "summary": {
     "amount": 1000,
     "interest": 200,
     "clearedByCredits": 200,
     "clearedByPayments": 200,
-    "clearedByWriteOffs": 0,
-    "balance": 800
+    "clearedByWriteOffs": 100,
+    "balance": 700
   },
 
   "_links": {
