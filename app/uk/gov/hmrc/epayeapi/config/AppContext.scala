@@ -38,8 +38,7 @@ case class AppContext @Inject() (config: DefaultServicesConfig) {
     Try(current.getString("useSandboxConnectors").getOrElse("false").toBoolean)
       .getOrElse(false)
   val whitelistedApplications: Seq[String] =
-    current.getString("whitelistedApplications").getOrElse("")
-      .split(",").filter(_.nonEmpty).map(_.trim)
+    current.getStringSeq("whiteListedApplicationIds").getOrElse(Seq.empty)
 
   Logger.info(
     s"AppContext startup: " +
