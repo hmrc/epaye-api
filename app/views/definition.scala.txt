@@ -30,6 +30,7 @@
       {
         "version": "1.0",
         "status": "@status",
+        "endpointsEnabled": false,
         "access": {
           "type": "PRIVATE",
           "whitelistedApplicationIds": [
