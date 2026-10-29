@@ -55,7 +55,7 @@ private object AppDependencies {
       "com.github.tomakehurst" % "wiremock" % "1.57" % scope,
       "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % scope,
       "info.cukes" %% "cucumber-scala" % "1.2.4" % scope,
-      "info.cukes" % "cucumber-junit" % "1.2.4" % scope,
+      "info.cukes" % "cucumber-junit" % "1.2.6" % scope,
       "com.github.java-json-tools" % "json-schema-validator" % "2.2.8" % scope
     )
   }
