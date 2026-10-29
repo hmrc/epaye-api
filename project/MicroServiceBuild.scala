@@ -51,7 +51,7 @@ private object AppDependencies {
       "org.pegdown" % "pegdown" % pegdownVersion % scope,
       "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
       "org.mockito" % "mockito-core" % "1.9.0" % scope,
-      "org.scalaj" %% "scalaj-http" % "1.1.5" % scope,
+      "org.scalaj" %% "scalaj-http" % "1.1.6" % scope,
       "com.github.tomakehurst" % "wiremock" % "1.57" % scope,
       "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % scope,
       "info.cukes" %% "cucumber-scala" % "1.2.4" % scope,
