@@ -14,7 +14,7 @@ private object AppDependencies {
   private val playConfigVersion = "4.3.0"
   private val playHealthVersion = "2.1.0"
   private val playUrlBindersVersion = "2.1.0"
-  private val scalaTestVersion = "3.0.0"
+  private val scalaTestVersion = "3.2.20"
   private val authClientVersion = "2.5.0"
 
   val compile = Seq(
@@ -36,10 +36,10 @@ private object AppDependencies {
       "uk.gov.hmrc" %% "hmrctest" % hmrcTestVersion % scope,
       "org.pegdown" % "pegdown" % pegdownVersion % scope,
       "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
-      "org.mockito" % "mockito-core" % "1.9.0" % scope,
-      "com.github.tomakehurst" % "wiremock" % "1.57" % scope,
+      "org.mockito" % "mockito-core" % "1.10.19" % scope,
+      "com.github.tomakehurst" % "wiremock" % "1.58" % scope,
       "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.1" % scope,
-      "com.github.java-json-tools" % "json-schema-validator" % "2.2.8" % scope
+      "com.github.java-json-tools" % "json-schema-validator" % "2.2.14" % scope
     )
   }
 
@@ -50,13 +50,13 @@ private object AppDependencies {
       "org.scalatest" %% "scalatest" % scalaTestVersion % scope,
       "org.pegdown" % "pegdown" % pegdownVersion % scope,
       "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
-      "org.mockito" % "mockito-core" % "1.9.0" % scope,
-      "org.scalaj" %% "scalaj-http" % "1.1.5" % scope,
-      "com.github.tomakehurst" % "wiremock" % "1.57" % scope,
+      "org.mockito" % "mockito-core" % "1.10.19" % scope,
+      "org.scalaj" %% "scalaj-http" % "1.1.6" % scope,
+      "com.github.tomakehurst" % "wiremock" % "1.58" % scope,
       "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % scope,
-      "info.cukes" %% "cucumber-scala" % "1.2.4" % scope,
-      "info.cukes" % "cucumber-junit" % "1.2.4" % scope,
-      "com.github.java-json-tools" % "json-schema-validator" % "2.2.8" % scope
+      "info.cukes" %% "cucumber-scala" % "1.2.6" % scope,
+      "info.cukes" % "cucumber-junit" % "1.2.6" % scope,
+      "com.github.java-json-tools" % "json-schema-validator" % "2.2.14" % scope
     )
   }
 
