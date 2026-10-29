@@ -36,9 +36,9 @@ private object AppDependencies {
       "uk.gov.hmrc" %% "hmrctest" % hmrcTestVersion % scope,
       "org.pegdown" % "pegdown" % pegdownVersion % scope,
       "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
-      "org.mockito" % "mockito-core" % "1.9.0" % scope,
-      "com.github.tomakehurst" % "wiremock" % "1.57" % scope,
-      "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.1" % scope,
+      "org.mockito" % "mockito-core" % "5.24.0" % scope,
+      "com.github.tomakehurst" % "wiremock" % "3.0.1" % scope,
+      "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.2" % scope,
       "com.github.java-json-tools" % "json-schema-validator" % "2.2.8" % scope
     )
   }
@@ -50,10 +50,10 @@ private object AppDependencies {
       "org.scalatest" %% "scalatest" % scalaTestVersion % scope,
       "org.pegdown" % "pegdown" % pegdownVersion % scope,
       "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
-      "org.mockito" % "mockito-core" % "1.9.0" % scope,
-      "org.scalaj" %% "scalaj-http" % "1.1.5" % scope,
-      "com.github.tomakehurst" % "wiremock" % "1.57" % scope,
-      "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % scope,
+      "org.mockito" % "mockito-core" % "5.24.0" % scope,
+      "org.scalaj" %% "scalaj-http" % "2.4.2" % scope,
+      "com.github.tomakehurst" % "wiremock" % "3.0.1" % scope,
+      "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.2" % scope,
       "info.cukes" %% "cucumber-scala" % "1.2.4" % scope,
       "info.cukes" % "cucumber-junit" % "1.2.4" % scope,
       "com.github.java-json-tools" % "json-schema-validator" % "2.2.8" % scope
