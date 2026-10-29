@@ -54,7 +54,7 @@ private object AppDependencies {
       "org.scalaj" %% "scalaj-http" % "1.1.5" % scope,
       "com.github.tomakehurst" % "wiremock" % "1.57" % scope,
       "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % scope,
-      "info.cukes" %% "cucumber-scala" % "1.2.4" % scope,
+      "info.cukes" %% "cucumber-scala" % "1.2.6" % scope,
       "info.cukes" % "cucumber-junit" % "1.2.4" % scope,
       "com.github.java-json-tools" % "json-schema-validator" % "2.2.8" % scope
     )
