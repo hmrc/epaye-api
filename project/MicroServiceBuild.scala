@@ -4,10 +4,10 @@ private object AppDependencies {
   import play.core.PlayVersion
   import play.sbt.PlayImport._
 
-  private val apiPlatformlibVersion = "1.3.0"
-  private val domainVersion = "5.1.0"
+  private val apiPlatformlibVersion = "9.0.0"
+  private val domainVersion = "8.3.0-play-28"
   private val hmrcTestVersion = "3.0.0"
-  private val logbackJsonLoggerVersion = "3.1.0"
+  private val logbackJsonLoggerVersion = "5.7.0"
   private val metricsGraphiteVersion = "3.0.2"
   private val microserviceBootstrapVersion = "6.18.0"
   private val pegdownVersion = "1.6.0"
@@ -15,7 +15,7 @@ private object AppDependencies {
   private val playHealthVersion = "2.1.0"
   private val playUrlBindersVersion = "2.1.0"
   private val scalaTestVersion = "3.0.0"
-  private val authClientVersion = "2.5.0"
+  private val authClientVersion = "9.0.0"
 
   val compile = Seq(
     ws,
@@ -36,9 +36,9 @@ private object AppDependencies {
       "uk.gov.hmrc" %% "hmrctest" % hmrcTestVersion % scope,
       "org.pegdown" % "pegdown" % pegdownVersion % scope,
       "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
-      "org.mockito" % "mockito-core" % "1.9.0" % scope,
-      "com.github.tomakehurst" % "wiremock" % "1.57" % scope,
-      "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.1" % scope,
+      "org.mockito" % "mockito-core" % "5.24.0" % scope,
+      "com.github.tomakehurst" % "wiremock" % "3.0.1" % scope,
+      "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.2" % scope,
       "com.github.java-json-tools" % "json-schema-validator" % "2.2.8" % scope
     )
   }
@@ -50,10 +50,10 @@ private object AppDependencies {
       "org.scalatest" %% "scalatest" % scalaTestVersion % scope,
       "org.pegdown" % "pegdown" % pegdownVersion % scope,
       "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
-      "org.mockito" % "mockito-core" % "1.9.0" % scope,
-      "org.scalaj" %% "scalaj-http" % "1.1.5" % scope,
-      "com.github.tomakehurst" % "wiremock" % "1.57" % scope,
-      "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % scope,
+      "org.mockito" % "mockito-core" % "5.24.0" % scope,
+      "org.scalaj" %% "scalaj-http" % "2.4.2" % scope,
+      "com.github.tomakehurst" % "wiremock" % "3.0.1" % scope,
+      "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.2" % scope,
       "info.cukes" %% "cucumber-scala" % "1.2.4" % scope,
       "info.cukes" % "cucumber-junit" % "1.2.4" % scope,
       "com.github.java-json-tools" % "json-schema-validator" % "2.2.8" % scope
